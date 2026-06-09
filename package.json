@@ -18,7 +18,7 @@
   "type": "commonjs",
   "main": "main.js",
   "scripts": {
-    "test": "node main.js"
+    "start": "node main.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
