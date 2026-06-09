@@ -1,45 +1,42 @@
+![Node.js](https://img.shields.io/badge/Node.js-24-green)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-blue)
+![Redis](https://img.shields.io/badge/Redis-Upstash-red)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 # URLify – Smart URL Shortener & Analytics Platform
 
 A production-style URL shortener and analytics platform inspired by Bitly, built with performance, scalability, and real-time analytics in mind.
 
-## Features
+## Key Features
 
-### URL Management
+### Smart URL Management
 
-* Shorten long URLs with custom aliases
-* QR code generation and download for shortened links
+* Custom short aliases
 * URL expiration support
 * Active/inactive link management
-* Click tracking and analytics
+* QR code generation and download
 
-
-### Authentication & Security
-
-* JWT cookie-based authentication
-* Password hashing using bcrypt
-* Protected routes and middleware
-* Rate limiting for abuse prevention
-
-### Analytics Dashboard
+### Real-Time Analytics
 
 * Total clicks and unique visitors
 * Browser, OS, and device analytics
-* Traffic source breakdown
 * Region-based analytics
-* Redirect latency tracking
-* Time-series click visualization
+* Traffic source tracking
+* Real-time click updates using WebSockets
 
 ### Performance Optimizations
 
-* Redis caching for fast redirects
+* Redis caching for low-latency redirects
 * Asynchronous analytics processing
 * Optimized PostgreSQL queries
-* Reduced redirect latency using caching
+* Rate limiting to prevent abuse
 
-### Real-Time Features
+### Security
 
-* Live click notifications using WebSockets
-* Recent activity tracking
+* JWT cookie-based authentication
+* Password hashing with bcrypt
+* Protected routes and middleware
+
 
 ## Tech Stack
 
@@ -68,23 +65,55 @@ A production-style URL shortener and analytics platform inspired by Bitly, built
 
 ## Architecture
 
-URLify follows a scalable backend architecture:
+URLify follows a scalable backend architecture optimized for fast redirects, caching, and asynchronous analytics processing.
 
 ```text
-User Request
-     ↓
-Redis Cache Check
-     ↓
-Cache Hit → Redirect
-     ↓
-Cache Miss
-     ↓
-PostgreSQL Lookup
-     ↓
-Async Analytics Logging
-     ↓
-302 Redirect
+                    User Request
+                          ↓
+                   Rate Limiter
+                          ↓
+                  URL Redirect API
+                          ↓
+                 Redis Cache Check
+                    ↙           ↘
+             Cache Hit        Cache Miss
+                 ↓                 ↓
+          Immediate Redirect   PostgreSQL Lookup
+                 ↓                 ↓
+             Async Analytics Logging
+                          ↓
+                     302 Redirect
 ```
+
+
+
+### Request Flow
+
+1. Incoming requests pass through rate limiting to prevent abuse.
+2. Redis cache is checked for fast URL retrieval.
+3. Cache hits redirect immediately with minimal latency.
+4. Cache misses fetch data from PostgreSQL and refresh cache.
+5. Click analytics are logged asynchronously to avoid blocking redirects.
+6. Users are redirected using HTTP `302` responses.
+
+## Engineering Decisions
+
+### Why Redis?
+
+Redis caching reduces redirect latency by avoiding repeated database lookups for frequently accessed links.
+
+### Why asynchronous analytics?
+
+Analytics logging runs asynchronously so redirects remain fast and user experience is not blocked.
+
+### Why PostgreSQL?
+
+PostgreSQL was chosen for reliable relational storage and analytics querying.
+
+### Why JWT cookies?
+
+JWT cookie authentication provides secure session handling and protected route access.
+
 
 ## Database Schema
 
@@ -158,6 +187,13 @@ Stores user preferences and analytics settings.
 * Reduced redirect latency through Redis caching
 * Server-side lifecycle timing measurements
 * Async analytics logging to avoid blocking redirects
+* 
+## Challenges Faced
+
+* Optimizing redirect latency using Redis caching
+* Handling asynchronous analytics without blocking redirects
+* Managing real-time click updates using WebSockets
+* Preventing authentication redirect loops
 
 ## Screenshots
 
