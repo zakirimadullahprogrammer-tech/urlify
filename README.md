@@ -192,9 +192,18 @@ Stores user preferences and analytics settings.
 
 ### Redirect Optimization
 
-* Reduced redirect latency through Redis caching
-* Server-side lifecycle timing measurements
-* Async analytics logging to avoid blocking redirects
+* Reduced average redirect latency from ~300ms to ~70ms using Redis caching
+* Measured server-side lifecycle timings (`redisMs`, `dbMs`, `redirectTimeMs`)
+* Implemented asynchronous analytics logging to keep redirects non-blocking
+* Cache-first redirect architecture for frequently accessed links
+
+## Scalability Considerations
+
+* Redis cache layer reduces database load for frequently accessed URLs
+* PostgreSQL indexing for faster URL and analytics lookups
+* Asynchronous analytics logging prevents redirect bottlenecks
+* Rate limiting protects public redirect APIs from abuse
+* Modular API structure for future microservice migration
   
 ## Challenges Faced
 
