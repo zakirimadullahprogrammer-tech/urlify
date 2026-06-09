@@ -96,6 +96,14 @@ URLify follows a scalable backend architecture optimized for fast redirects, cac
 5. Click analytics are logged asynchronously to avoid blocking redirects.
 6. Users are redirected using HTTP `302` responses.
 
+## System Design Highlights
+
+* Redis cache-aside pattern for fast redirects
+* PostgreSQL as source of truth
+* Async analytics logging to keep redirect path non-blocking
+* Rate limiting on public redirect routes
+* WebSocket-based live click notifications
+
 ## Engineering Decisions
 
 ### Why Redis?
@@ -187,13 +195,22 @@ Stores user preferences and analytics settings.
 * Reduced redirect latency through Redis caching
 * Server-side lifecycle timing measurements
 * Async analytics logging to avoid blocking redirects
-* 
+  
 ## Challenges Faced
 
-* Optimizing redirect latency using Redis caching
-* Handling asynchronous analytics without blocking redirects
-* Managing real-time click updates using WebSockets
-* Preventing authentication redirect loops
+* Reduced redirect latency by separating analytics logging from the redirect path
+* Implemented Redis cache fallback for database misses
+* Prevented authentication redirect loops using protected route middleware
+* Managed real-time dashboard updates with WebSockets
+* Designed analytics queries for browser, OS, device, region, and traffic source breakdowns
+
+## What I Learned
+
+* Designing low-latency backend APIs
+* Using Redis caching with PostgreSQL
+* Building async analytics pipelines
+* Handling authentication securely with JWT cookies
+* Structuring analytics dashboards from raw event data
 
 ## Screenshots
 
