@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../styles/mediaQueries.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sofia&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/login.css">
+
+  <title>Login to URLify | URLify</title>
+</head>
+
+<body>
+  <main class="auth-page">
+
+    <section class="auth-panel">
+      <div class="auth-brand">
+        <h1 class="sofia-bold">urlify</h1>
+        <p class="inter-regular">
+          Smart link management and real-time analytics.
+        </p>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-header">
+          <span class="material-symbols-outlined">
+            lock
+          </span>
+
+          <h2 class="inter-bold">
+            Welcome back
+          </h2>
+
+          <p class="inter-regular">
+            Login to manage links, track clicks, and view analytics.
+          </p>
+        </div>
+
+        <div class="auth-form">
+          <label class="inter-bold" for="username">
+            Username
+          </label>
+
+          <div class="auth-input-wrap">
+            <span class="material-symbols-outlined">
+              person
+            </span>
+
+            <input
+              type="text"
+              id="username"
+              class="inter-regular"
+              placeholder="Enter your username"
+              autocomplete="username"
+            >
+          </div>
+
+          <label class="inter-bold" for="password">
+            Password
+          </label>
+
+          <div class="auth-input-wrap">
+            <span class="material-symbols-outlined">
+              key
+            </span>
+
+            <input
+              type="password"
+              id="password"
+              class="inter-regular"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            >
+          </div>
+
+          <label class="auth-check inter-regular">
+            <input type="checkbox" id="password_checker">
+            Show password
+          </label>
+
+          <button type="button" class="auth-primary-btn log-btn">
+            <span>Login</span>
+            <span class="material-symbols-outlined">
+              arrow_forward
+            </span>
+          </button>
+
+          <div class="auth-divider">
+            <span>OR</span>
+          </div>
+
+          <p class="auth-footer-text inter-regular">
+            Don’t have an account?
+            <button
+              type="button"
+              onclick="transport('/pages/signup')"
+            >
+              Sign up now
+            </button>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-visual">
+      <div class="auth-visual-card">
+        <div class="visual-top">
+          <span class="material-symbols-outlined">
+            analytics
+          </span>
+
+          <div>
+            <h3 class="inter-bold">
+              Analytics Dashboard
+            </h3>
+
+            <p class="inter-regular">
+              Track clicks, regions, devices, and traffic sources.
+            </p>
+          </div>
+        </div>
+
+        <div class="visual-bars">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="visual-stats">
+          <div>
+            <h4>24.8K</h4>
+            <p>Total clicks</p>
+          </div>
+
+          <div>
+            <h4>8.9K</h4>
+            <p>Visitors</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="centralize_loader">
+    <div class="loader_box">
+      <div class="loading"></div>
+    </div>
+  </div>
+
+  <script src="../scripts/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sofia&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles/mediaQueries.css">
+  <link rel="stylesheet" href="styles/styles.css">
+
+  <title>URLify | Smart URL Shortener & Analytics Platform</title>
+</head>
+
+<body>
+
+  <section class="home-hero">
+    <nav class="home-nav">
+      <h1 class="sofia-bold">urlify</h1>
+
+      <div class="home-nav-actions">
+        <button onclick="transport('/pages/login')" class="nav-login-btn">
+          Login
+        </button>
+
+        <button onclick="transport('/pages/signup')" class="nav-primary-btn">
+          Get Started
+        </button>
+      </div>
+    </nav>
+
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="material-symbols-outlined">bolt</span>
+          Production-ready link analytics platform
+        </div>
+
+        <h1>
+          Shorten links. Track clicks. Understand your audience.
+        </h1>
+
+        <p>
+          URLify helps you create branded short links, monitor real-time clicks,
+          analyze traffic sources, and manage link performance from one secure dashboard.
+        </p>
+
+        <div class="hero-actions">
+          <button onclick="transport('/pages/signup')" class="hero-primary-btn">
+            Start for Free
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+
+          <button onclick="transport('/pages/login')" class="hero-secondary-btn">
+            Open Dashboard
+          </button>
+        </div>
+
+        <div class="hero-stats">
+          <div>
+            <h3>Redis</h3>
+            <p>Fast redirects</p>
+          </div>
+
+          <div>
+            <h3>PostgreSQL</h3>
+            <p>Reliable storage</p>
+          </div>
+
+          <div>
+            <h3>JWT</h3>
+            <p>Secure workspace</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="url-box">
+          <span class="material-symbols-outlined">link_2</span>
+
+          <input
+            type="text"
+            id="url"
+            autocomplete="off"
+            placeholder="Paste your long URL..."
+          >
+
+          <button class="short_ad_btn">
+            Shorten
+          </button>
+        </div>
+
+        <div class="mock-dashboard-card">
+          <div class="mock-header">
+            <span>Click Analytics</span>
+            <small>Last 30 days</small>
+          </div>
+
+          <div class="mock-chart">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="mock-grid">
+            <div>
+              <h4>19.4K</h4>
+              <p>Total clicks</p>
+            </div>
+
+            <div>
+              <h4>8.2K</h4>
+              <p>Visitors</p>
+            </div>
+
+            <div>
+              <h4>IN</h4>
+              <p>Top region</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="section-heading">
+      <span>Platform</span>
+      <h2>Everything needed to manage links professionally</h2>
+      <p>
+        Built like a real SaaS product with authentication, analytics, caching,
+        filtering, exports, and real-time updates.
+      </p>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span class="material-symbols-outlined">alternate_email</span>
+        <h3>Branded Short Links</h3>
+        <p>Create clean custom aliases with expiry controls and link status management.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="material-symbols-outlined">analytics</span>
+        <h3>Advanced Analytics</h3>
+        <p>Track clicks, unique visitors, browsers, devices, operating systems, and regions.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="material-symbols-outlined">public</span>
+        <h3>Geographic Insights</h3>
+        <p>Understand where your audience comes from using country-level click analytics.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="material-symbols-outlined">notifications_active</span>
+        <h3>Live Click Updates</h3>
+        <p>Receive real-time activity updates whenever users interact with your links.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="architecture-section">
+    <div class="section-heading">
+      <span>Engineering</span>
+      <h2>Designed with production-grade architecture</h2>
+      <p>
+        URLify uses a fast redirect pipeline, Redis caching, PostgreSQL persistence,
+        secure APIs, and analytics processing.
+      </p>
+    </div>
+
+    <div class="architecture-grid">
+      <div class="architecture-card">
+        <h3>Redirect Engine</h3>
+        <p>Low-latency redirect flow using Redis cache with PostgreSQL fallback.</p>
+      </div>
+
+      <div class="architecture-card">
+        <h3>Analytics Pipeline</h3>
+        <p>Captures click source, country, device, browser, OS, and redirect timing.</p>
+      </div>
+
+      <div class="architecture-card">
+        <h3>Secure Workspace</h3>
+        <p>JWT authentication, hashed passwords, protected routes, and user-specific data.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="workflow-section">
+    <div class="section-heading">
+      <span>Workflow</span>
+      <h2>From long URL to actionable insights</h2>
+    </div>
+
+    <div class="workflow-grid">
+      <div class="workflow-step">
+        <span>01</span>
+        <h3>Paste URL</h3>
+        <p>Add your long URL and optional custom alias.</p>
+      </div>
+
+      <div class="workflow-step">
+        <span>02</span>
+        <h3>Share Short Link</h3>
+        <p>Generate a clean short link ready for sharing anywhere.</p>
+      </div>
+
+      <div class="workflow-step">
+        <span>03</span>
+        <h3>Track Performance</h3>
+        <p>Monitor clicks, regions, devices, sources, and recent activity.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <h2>Build smarter links with URLify</h2>
+    <p>
+      A complete link management and analytics dashboard built with real backend,
+      caching, authentication, and production-style workflows.
+    </p>
+
+    <button onclick="transport('/pages/signup')" class="hero-primary-btn">
+      Create Your Account
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </button>
+  </section>
+
+  <footer class="saas-footer">
+    <div>
+      <h1 class="sofia-bold">urlify</h1>
+      <p>
+        Smart link management, real-time analytics, and secure workspace tools.
+      </p>
+    </div>
+
+    <p>© 2026 URLify. Built for fast links and smarter insights.</p>
+  </footer>
+
+  <script src="scripts/index.js"></script>
+</body>
+</html>

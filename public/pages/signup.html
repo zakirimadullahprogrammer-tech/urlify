@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../styles/mediaQueries.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sofia&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/signup.css">
+
+  <title>Create URLify Account | URLify</title>
+</head>
+
+<body>
+  <main class="auth-page signup-auth-page">
+
+    <section class="auth-panel">
+      <div class="auth-brand">
+        <h1 class="sofia-bold">urlify</h1>
+        <p class="inter-regular">
+          Create short links, track performance, and understand your audience.
+        </p>
+      </div>
+
+      <div class="auth-card signup-card">
+        <div class="auth-header">
+          <span class="material-symbols-outlined">
+            person_add
+          </span>
+
+          <h2 class="inter-bold">
+            Create your account
+          </h2>
+
+          <p class="inter-regular">
+            Start managing links with real-time analytics and secure workspace tools.
+          </p>
+        </div>
+
+        <div class="auth-form">
+          <label class="inter-bold" for="full_name">
+            Full name
+          </label>
+
+          <div class="auth-input-wrap">
+            <span class="material-symbols-outlined">
+              badge
+            </span>
+
+            <input
+              type="text"
+              id="full_name"
+              class="inter-regular"
+              placeholder="Enter your full name"
+              autocomplete="name"
+            >
+          </div>
+
+          <label class="inter-bold" for="user_name">
+            Username
+          </label>
+
+          <div class="auth-input-wrap">
+            <span class="material-symbols-outlined">
+              alternate_email
+            </span>
+
+            <input
+              type="text"
+              id="user_name"
+              class="inter-regular"
+              placeholder="Create a username"
+              autocomplete="username"
+            >
+          </div>
+
+          <label class="inter-bold" for="password">
+            Password
+          </label>
+
+          <div class="auth-input-wrap">
+            <span class="material-symbols-outlined">
+              key
+            </span>
+
+            <input
+              type="password"
+              id="password"
+              class="inter-regular"
+              placeholder="Create a strong password"
+              autocomplete="new-password"
+            >
+          </div>
+
+          <label class="inter-bold" for="password_confirmed">
+            Confirm password
+          </label>
+
+          <div class="auth-input-wrap">
+            <span class="material-symbols-outlined">
+              verified_user
+            </span>
+
+            <input
+              type="password"
+              id="password_confirmed"
+              class="inter-regular"
+              placeholder="Confirm your password"
+              autocomplete="new-password"
+            >
+          </div>
+
+          <label class="auth-check inter-regular">
+            <input type="checkbox" id="agreement_checker">
+            <span>
+              I agree to the Terms & Conditions of
+              <strong class="sofia-bold">urlify</strong>
+            </span>
+          </label>
+
+          <button type="button" class="auth-primary-btn sign-btn">
+            <span>Create account</span>
+            <span class="material-symbols-outlined">
+              arrow_forward
+            </span>
+          </button>
+
+          <div class="auth-divider">
+            <span>OR</span>
+          </div>
+
+          <p class="auth-footer-text inter-regular">
+            Already have an account?
+            <button
+              type="button"
+              onclick="transport('/pages/login')"
+            >
+              Login now
+            </button>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-visual signup-visual">
+      <div class="auth-visual-card">
+        <div class="visual-top">
+          <span class="material-symbols-outlined">
+            rocket_launch
+          </span>
+
+          <div>
+            <h3 class="inter-bold">
+              Launch your link workspace
+            </h3>
+
+            <p class="inter-regular">
+              Create, manage, analyze, and export link performance from one dashboard.
+            </p>
+          </div>
+        </div>
+
+        <div class="signup-feature-list">
+          <div>
+            <span class="material-symbols-outlined">
+              link_2
+            </span>
+            <p>Custom short links</p>
+          </div>
+
+          <div>
+            <span class="material-symbols-outlined">
+              analytics
+            </span>
+            <p>Click analytics</p>
+          </div>
+
+          <div>
+            <span class="material-symbols-outlined">
+              public
+            </span>
+            <p>Geo insights</p>
+          </div>
+
+          <div>
+            <span class="material-symbols-outlined">
+              security
+            </span>
+            <p>Secure dashboard</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="centralize_loader">
+    <div class="loader_box">
+      <div class="loading"></div>
+    </div>
+  </div>
+
+  <script src="../scripts/signup.js"></script>
+</body>
+</html>

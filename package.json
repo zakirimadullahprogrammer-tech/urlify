@@ -1,0 +1,39 @@
+{
+  "name": "urlify",
+  "version": "1.0.0",
+  "description": "This package contains a link shortener software, similar to Bitly",
+  "keywords": [
+    "urlify"
+  ],
+  "homepage": "https://github.com/zakirimadullahprogrammer-tech/urlify#readme",
+  "bugs": {
+    "url": "https://github.com/zakirimadullahprogrammer-tech/urlify/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zakirimadullahprogrammer-tech/urlify.git"
+  },
+  "license": "ISC",
+  "author": "Zakir Imadullah",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.js"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@upstash/redis": "^1.38.0",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "geoip-lite": "^2.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.21.0",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.3",
+    "ua-parser-js": "^2.0.9"
+  }
+}
