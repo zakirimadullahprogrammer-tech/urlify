@@ -591,13 +591,19 @@ function isValidPassword(password) {
   });
 }
 async function getLinksFromAPI() {
+  const hadLinksBefore = allLinks.length > 0;
+
   isLinksLoading = true;
 
   setSyncButtonState(linksSyncBtn, true);
+  setSectionSyncing("linksSection", true);
 
   toggleLinksControls(false);
   lockSectionSwitching();
-  showLinksSkeletons();
+
+  if (!hadLinksBefore) {
+    showLinksSkeletons();
+  }
 
   try {
     const response = await fetch("/api/links", {
@@ -607,9 +613,19 @@ async function getLinksFromAPI() {
 
     const data = await response.json();
 
+    if (!response.ok) {
+      throw new Error(
+        data?.message || "Failed to fetch links"
+      );
+    }
+
     allLinks = Array.isArray(data.links)
       ? data.links
       : [];
+
+    if (!hadLinksBefore) {
+      hideLinksSkeletons();
+    }
 
     if (searcher && statusFilter && sortFilter) {
       applyFiltersSortingAndSearch();
@@ -618,22 +634,43 @@ async function getLinksFromAPI() {
       updateStats();
     }
 
+    return true;
+
   } catch (error) {
     console.log("Error fetching links:", error);
 
+    if (!hadLinksBefore) {
+      hideLinksSkeletons();
+
+      const tableBody =
+        document.getElementById("linksTableBody");
+
+      if (tableBody) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="7" class="empty-table">
+              No network connection
+            </td>
+          </tr>
+        `;
+      }
+    }
+
     showToast(
-      "Failed to load links",
-      "Please try again.",
+      "Unable to refresh links",
+      "Please check your internet connection.",
       "error"
     );
+
+    return false;
 
   } finally {
     isLinksLoading = false;
 
     toggleLinksControls(true);
-    hideLinksSkeletons();
     unlockSectionSwitching();
 
+    setSectionSyncing("linksSection", false);
     setSyncButtonState(linksSyncBtn, false);
   }
 }
@@ -2442,11 +2479,12 @@ async function loadAnalytics(
   showSuccessToast = false
 ) {
   setSyncButtonState(analyticsSyncBtn, true);   
+  setSectionSyncing("analyticsSection", true);
    let analyticsUpdatedSuccessfully = false;
 
-  if (fullReload && !silent) {
-    showAnalyticsSkeletons();
-  }
+  if (fullReload && !silent && !analyticsLoadedOnce) {
+  showAnalyticsSkeletons();
+}
 
   if (!silent) {
     lockSectionSwitching();
@@ -2466,16 +2504,15 @@ async function loadAnalytics(
       document.getElementById("analyticsRange")?.value || "30";
 
     loadAnalytics.currentRange = selectedRange;
+if (requestId !== null && analyticsLoadedOnce) {
+  if (chartRangeLoader) {
+    chartRangeLoader.style.display = "flex";
+  }
 
-    if (analyticsLoadedOnce && !silent) {
-      if (chartRangeLoader) {
-        chartRangeLoader.style.display = "flex";
-      }
-
-      if (chartCanvas) {
-        chartCanvas.style.opacity = "0";
-      }
-    }
+  if (chartCanvas) {
+    chartCanvas.style.opacity = "0";
+  }
+}
 
     const analyticsUrl =
       window.currentAnalyticsMode === "single" &&
@@ -2656,55 +2693,70 @@ updateAnalyticsModeUI(data);
     error
   );
 
-  hideAnalyticsSkeletons();
-  hideClickChartSkeleton();
+  // First load failed
+  if (!analyticsLoadedOnce) {
 
-  // Only update elements that failed
+    hideAnalyticsSkeletons();
+    hideClickChartSkeleton();
 
-  showCardError("totalClicks");
-  showCardError("uniqueVisitors");
-  showCardError("avgRedirectTime");
+    showCardError("totalClicks");
+    showCardError("uniqueVisitors");
+    showCardError("avgRedirectTime");
 
-  showTopRegionError();
+    showTopRegionError();
 
-  showListError(
-    "trafficSourcesContainer",
-    "No traffic source data available"
-  );
+    showListError(
+      "trafficSourcesContainer",
+      "No network connection"
+    );
 
-  showListError(
-    "browserAnalyticsContainer",
-    "No browser analytics available"
-  );
+    showListError(
+      "browserAnalyticsContainer",
+      "No network connection"
+    );
 
-  showListError(
-    "osAnalyticsContainer",
-    "No OS analytics available"
-  );
+    showListError(
+      "osAnalyticsContainer",
+      "No network connection"
+    );
 
-  showListError(
-    "topLinksContainer",
-    "No link performance data available"
-  );
+    showListError(
+      "topLinksContainer",
+      "No network connection"
+    );
 
-  showListError(
-    "recentActivityContainer",
-    "No recent activity available"
-  );
+    showListError(
+      "recentActivityContainer",
+      "No network connection"
+    );
 
-  showMapError();
+    showMapError(
+      "No network connection"
+    );
 
-  showClickChartError();
+    showClickChartError(
+      "No network connection"
+    );
+  }
+
+  // Already loaded once
+  else {
+    console.warn(
+      "Refresh failed — keeping previous analytics"
+    );
+  }
 
   if (!silent) {
     showToast(
-      "Overview sync failed",
-      "Please check your internet connection and try again.",
+      "Unable to refresh analytics",
+      "Please check your internet connection.",
       "error"
     );
   }
 } finally {
   setSyncButtonState(analyticsSyncBtn, false);
+  setSectionSyncing("analyticsSection", false);
+  
     const elapsedTime =
       Date.now() - loaderStartTime;
 
@@ -2718,8 +2770,8 @@ requestAnimationFrame(() => {
   if (analyticsUpdatedSuccessfully) {
   requestAnimationFrame(() => {
     if (fullReload && !silent) {
-      hideAnalyticsSkeletons();
-    }
+  hideAnalyticsSkeletons();
+}
 
     updateAnalyticsLastUpdated();
     analyticsLoadedOnce = true;
@@ -2737,13 +2789,15 @@ requestAnimationFrame(() => {
       hideAnalyticsSkeletons();
     }
 
-    if (chartCanvas) {
-      chartCanvas.style.opacity = "1";
-    }
+    if (requestId !== null) {
+  if (chartCanvas) {
+    chartCanvas.style.opacity = "1";
+  }
 
-    if (chartRangeLoader) {
-      chartRangeLoader.style.display = "none";
-    }
+  if (chartRangeLoader) {
+    chartRangeLoader.style.display = "none";
+  }
+}
   }
 
   if (!silent) {
@@ -2751,6 +2805,7 @@ requestAnimationFrame(() => {
   }
 });
   }
+
 
 
 }
@@ -3173,16 +3228,17 @@ if (linksSyncBtn) {
   linksSyncBtn.addEventListener("click", async () => {
     if (linksSyncBtn.disabled) return;
 
-    await getLinksFromAPI();
+    const success = await getLinksFromAPI();
 
-    showToast(
-      "Links synced",
-      "Your latest links have been refreshed.",
-      "success"
-    );
+    if (success) {
+      showToast(
+        "Links synced",
+        "Your latest links have been refreshed.",
+        "success"
+      );
+    }
   });
 }
-
 if (settingsSyncBtn) {
   settingsSyncBtn.addEventListener("click", async () => {
     if (settingsSyncBtn.disabled) return;
@@ -3721,20 +3777,18 @@ function updateAnalyticsModeUI(data) {
   }
 }
 
-async function backToOverallAnalytics() {
+async function backToLinksSection() {
   window.currentAnalyticsMode = "overall";
   window.currentAnalyticsLinkId = null;
 
   setAnalyticsHeaderMode("overall");
 
-  showAnalyticsSkeletons();
-
-  await loadAnalytics(true);
+  await switchDashboardSection("linksSection");
 }
 
 document
   .getElementById("backToOverallAnalyticsBtn")
-  ?.addEventListener("click", backToOverallAnalytics);
+  ?.addEventListener("click", backToLinksSection);
 
   function setAnalyticsHeaderMode(mode, link = null) {
   const backBtn =
@@ -4508,31 +4562,31 @@ function formatXAxisLabel(value, index, total, granularity, selectedRange) {
   return `${day} ${month}`;
 }
 async function loadSettings() {
-  setSyncButtonState(settingsSyncBtn, true);
-  showSettingsSkeletons();
-  const cards =
-    document.querySelectorAll("#settingsSection .settings-card");
+  const fullNameInput =
+    document.getElementById("settingsFullName");
 
-  cards.forEach(card => {
-    card.classList.add("settings-skeleton-card");
-  });
+  const settingsAlreadyLoaded =
+    fullNameInput &&
+    fullNameInput.value.trim() !== "";
+
+  setSyncButtonState(settingsSyncBtn, true);
+  setSectionSyncing("settingsSection", true);
+
+  if (!settingsAlreadyLoaded) {
+    showSettingsSkeletons();
+  }
 
   try {
-    const response =
-      await fetch("/api/settings", {
-        credentials: "include"
-      });
+    const response = await fetch("/api/settings", {
+      credentials: "include"
+    });
 
-    const data =
-      await response.json();
+    const data = await response.json();
 
     if (!response.ok) {
-      showToast(
-        "Failed to load settings",
-        data.message || "Please try again.",
-        "error"
+      throw new Error(
+        data?.message || "Failed to load settings"
       );
-      return;
     }
 
     document.getElementById("settingsFullName").value =
@@ -4550,37 +4604,45 @@ async function loadSettings() {
     document.getElementById("analyticsAutoRefresh").checked =
       Boolean(data.preferences.analyticsAutoRefresh);
 
-      liveNotificationsEnabled =
-  Boolean(data.preferences.liveNotifications);
+    liveNotificationsEnabled =
+      Boolean(data.preferences.liveNotifications);
 
-analyticsAutoRefreshEnabled =
-  Boolean(data.preferences.analyticsAutoRefresh);
+    analyticsAutoRefreshEnabled =
+      Boolean(data.preferences.analyticsAutoRefresh);
 
-if (analyticsAutoRefreshEnabled) {
-  startAnalyticsAutoRefresh();
-} else {
-  stopAnalyticsAutoRefresh();
-}
+    if (analyticsAutoRefreshEnabled) {
+      startAnalyticsAutoRefresh();
+    } else {
+      stopAnalyticsAutoRefresh();
+    }
+
+    updateSettingsLastUpdated();
+
+    return true;
 
   } catch (error) {
     console.error("Settings Load Error:", error);
 
+    if (!settingsAlreadyLoaded) {
+      hideSettingsSkeletons();
+    }
+
     showToast(
-      "Something went wrong",
-      "Could not load settings.",
+      "Unable to refresh settings",
+      "Please check your internet connection.",
       "error"
     );
 
+    return false;
+
   } finally {
     setSyncButtonState(settingsSyncBtn, false);
-    cards.forEach(card => {
-      card.classList.remove("settings-skeleton-card");
-    });
-    hideSettingsSkeletons();
-    updateSettingsLastUpdated();
+    setSectionSyncing("settingsSection", false);
+
+    if (!settingsAlreadyLoaded) {
+      hideSettingsSkeletons();
+    }
   }
-
-
 }
 
 async function saveAccountSettings() {
@@ -5309,4 +5371,14 @@ async function switchDashboardSection(targetSection) {
   } finally {
     unlockSectionSwitching();
   }
+}
+function setSectionSyncing(sectionId, isSyncing) {
+  const section = document.getElementById(sectionId);
+
+  if (!section) return;
+
+  section.classList.toggle(
+    "section-syncing",
+    isSyncing
+  );
 }
