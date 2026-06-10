@@ -1824,7 +1824,14 @@ function renderRecentActivity() {
         <div class="activity-header">
           ${flag}
           <span>
-            ${countryName} clicked /${activity.shortCode || "unknown"}
+            ${countryName} clicked 
+<button
+  type="button"
+  class="analytics-short-link-btn"
+  onclick="openAnalyticsByShortCode(event, '${activity.shortCode}')"
+>
+  /${activity.shortCode || "unknown"}
+</button>
           </span>
         </div>
 
@@ -2422,7 +2429,13 @@ function renderTopLinks(data, totalClicks) {
 
         <div class="top-link-content">
           <div class="top-link-short">
-            /${link.shortCode}
+            <button
+  type="button"
+  class="analytics-short-link-btn"
+  onclick="openAnalyticsByShortCode(event, '${link.shortCode}')"
+>
+  /${link.shortCode}
+</button>
           </div>
 
           <div class="top-link-original" title="${link.originalUrl}">
@@ -3585,6 +3598,7 @@ function renderWorldMapWhenVisible(topRegions, totalClicks) {
     }, 80);
   });
 }
+
 async function openLinkAnalytics(event, linkId) {
   event.stopPropagation();
 
@@ -3654,7 +3668,7 @@ function updateAnalyticsModeUI(data) {
 
     if (modeLabel && link) {
       modeLabel.innerHTML =
-        `Viewing analytics for <strong>/${link.shortCode}</strong>`;
+        `Viewing analytics for <strong>${link.shortCode}</strong>`;
     }
 
     if (topLinksCard) {
@@ -5382,3 +5396,105 @@ function setSectionSyncing(sectionId, isSyncing) {
     isSyncing
   );
 }
+class HistoryNode {
+  constructor(sectionId) {
+    this.sectionId = sectionId;
+    this.prev = null;
+  }
+}
+
+let currentSectionId = "analyticsSection";
+let historyTop = null;
+
+function updateBackButtons() {
+  document.querySelectorAll(".section-back-btn").forEach(btn => {
+    btn.style.display = historyTop ? "flex" : "none";
+  });
+}
+
+function pushHistory(sectionId) {
+  const node = new HistoryNode(sectionId);
+  node.prev = historyTop;
+  historyTop = node;
+
+  updateBackButtons();
+}
+
+function switchSection(newSectionId) {
+  if (newSectionId === currentSectionId) return;
+
+  pushHistory(currentSectionId);
+
+  showSection(newSectionId);
+
+  currentSectionId = newSectionId;
+
+  updateBackButtons();
+}
+
+function goBackSection() {
+  if (!historyTop) return;
+
+  const previousSectionId = historyTop.sectionId;
+
+  historyTop = historyTop.prev;
+
+  showSection(previousSectionId);
+
+  currentSectionId = previousSectionId;
+
+  updateBackButtons();
+}
+
+function showSection(sectionId) {
+  document.querySelectorAll(".page_section").forEach(section => {
+    section.classList.remove("active_section");
+  });
+
+  document.querySelectorAll(".nav_box").forEach(nav => {
+    nav.classList.remove("active");
+  });
+
+  document.getElementById(sectionId)?.classList.add("active_section");
+
+  document
+    .querySelector(`.nav_box[data-section="${sectionId}"]`)
+    ?.classList.add("active");
+}
+
+document.querySelectorAll(".nav_box[data-section]").forEach(nav => {
+  nav.addEventListener("click", () => {
+    switchSection(nav.dataset.section);
+  });
+});
+
+updateBackButtons();
+
+window.goBackSection = goBackSection;
+window.switchSection = switchSection;
+window.openAnalyticsByShortCode = async function (event, shortCode) {
+  event.preventDefault();
+  event.stopPropagation();
+
+  if (!shortCode || shortCode === "unknown") {
+    return;
+  }
+
+  const cleanShortCode = shortCode.replace("/", "");
+
+  const selectedLink = allLinks.find(link => {
+    const linkCode = getShortCodeFromUrl(link.shortLink);
+    return linkCode === cleanShortCode;
+  });
+
+  if (!selectedLink) {
+    showToast(
+      "Link not found",
+      "Please refresh links and try again.",
+      "error"
+    );
+    return;
+  }
+
+  await openLinkAnalytics(event, selectedLink.id);
+};

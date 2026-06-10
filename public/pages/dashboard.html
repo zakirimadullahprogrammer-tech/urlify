@@ -2,7 +2,7 @@
 <html lang="en">
    <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="stylesheet" href="../styles/mediaQueries.css">
+      <link rel="stylesheet" href="../styles/mediaQueries.css">
       <script src="/socket.io/socket.io.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css">
@@ -20,15 +20,14 @@
       <title>Dashboard | URLify </title>
    </head>
    <body>
-    <button id="mobileMenuBtn" class="mobile-menu-btn" type="button">
-  <span class="material-symbols-outlined">menu</span>
-</button>
-
-<div id="mobileMenuOverlay"></div>
+      <button id="mobileMenuBtn" class="mobile-menu-btn" type="button">
+      <span class="material-symbols-outlined">menu</span>
+      </button>
+      <div id="mobileMenuOverlay"></div>
       <div class="dash_page flex">
          <div class="ds1">
             <h1 class="sofia-bold white dashboard_logo">urlify</h1>
-             <div class="flex-20 centralize nav_box active" data-section="analyticsSection">
+            <div class="flex-20 centralize nav_box active" data-section="analyticsSection">
                <span class="material-symbols-outlined white">
                overview
                </span>
@@ -44,729 +43,629 @@
                   Links
                </h3>
             </div>
-            
             <div class="flex-20 centralize nav_box" data-section="settingsSection">
-  <span class="material-symbols-outlined white">
-    settings
-  </span>
-
-  <h3 class="white inter-bold">
-    Settings
-  </h3>
-</div>
+               <span class="material-symbols-outlined white">
+               settings
+               </span>
+               <h3 class="white inter-bold">
+                  Settings
+               </h3>
+            </div>
             <div class="flex-20 centralize nav_box" id="logoutBtn">
                <span class="material-symbols-outlined white">logout</span>
                <h3 class="white inter-bold">Logout</h3>
             </div>
          </div>
          <div class="ds2">
-       <section
-  id="linksSection"
-  class="links page_section flex-20-col"
->
-  <div class="flex-20 centralize analytics-header links-header">
-
-    <div class="analytics-title-wrap">
-      <h1
-        id="linksTitle"
-        class="inter-bold"
-      >
-        Links
-      </h1>
-
-      <span
-        id="linksLastUpdated"
-        class="analytics-last-updated inter-regular"
-      >
-        Updated just now
-      </span>
-    </div>
-
-    <button
-      class="links-sync-btn"
-      title="Refresh Links"
-      aria-label="Refresh Links"
-      type="button"
-    >
-      <span class="material-symbols-outlined">
-        sync
-      </span>
-    </button>
-
-  </div>
-
-  <div class="analyticsInnerWrap">
-
-    <!-- Stats -->
-    <div class="stats-grid">
-
-      <div class="stat-card inter-bold">
-        <h1 id="totalLinks">
-          0
-        </h1>
-
-        <h4
-          id="totalLinksLabel"
-          class="inter-bold"
-        >
-          Total Links
-        </h4>
-      </div>
-
-      <div class="stat-card inter-bold">
-        <h1 id="activeLinks">
-          0
-        </h1>
-
-        <h4
-          id="activeLinksLabel"
-          class="inter-bold"
-        >
-          Active
-        </h4>
-      </div>
-
-      <div class="stat-card inter-bold">
-        <h1 id="inactiveLinks">
-          0
-        </h1>
-
-        <h4
-          id="inactiveLinksLabel"
-          class="inter-bold"
-        >
-          Inactive
-        </h4>
-      </div>
-
-      <div class="stat-card inter-bold">
-        <h1 id="expiredLinks">
-          0
-        </h1>
-
-        <h4
-          id="expiredLinksLabel"
-          class="inter-bold"
-        >
-          Expired
-        </h4>
-      </div>
-
-    </div>
-
-    <!-- Controls -->
-    <div
-      id="linksControls"
-      class="flex-20 w-100 search_container"
-    >
-
-      <div class="search-container">
-
-        <span class="material-symbols-outlined search-icon">
-          search
-        </span>
-
-        <input
-          type="text"
-          placeholder="Search links..."
-          autocomplete="off"
-          id="searcher"
-        >
-
-        <span
-          class="material-symbols-outlined clear-icon"
-          id="clearSearch"
-        >
-          close
-        </span>
-
-      </div>
-
-      <div class="filter-box">
-        <span class="material-symbols-outlined icon_filter">
-          filter_alt
-        </span>
-
-        <select id="statusFilter">
-          <option value="all" selected>
-            All Links
-          </option>
-
-          <option value="active">
-            Active
-          </option>
-
-          <option value="inactive">
-            Inactive
-          </option>
-
-          <option value="expired">
-            Expired
-          </option>
-        </select>
-      </div>
-
-      <div class="filter-box">
-        <span class="material-symbols-outlined icon_filter">
-          sort
-        </span>
-
-        <select id="sortFilter">
-          <option value="newest" selected>
-            Newest First
-          </option>
-
-          <option value="oldest">
-            Oldest First
-          </option>
-
-          <option value="most-clicked">
-            Most Clicked
-          </option>
-
-          <option value="least-clicked">
-            Least Clicked
-          </option>
-
-          <option value="recently-clicked">
-            Recently Clicked
-          </option>
-        </select>
-      </div>
-
-      <button
-        class="link_maker white flex-5 centralize open_maker"
-        type="button"
-      >
-        <span class="material-symbols-outlined">
-          add
-        </span>
-
-        <p class="inter-bold">
-          Create Link
-        </p>
-      </button>
-
-    </div>
-
-    <!-- Table -->
-    <div class="table-wrapper">
-
-      <table class="links_table">
-
-        <thead
-          id="linksTableHead"
-          class="inter-bold grey-similar"
-        >
-          <tr>
-            <th>Short Link</th>
-            <th>Original URL</th>
-            <th>Clicks</th>
-            <th>Status</th>
-            <th>Created</th>
-            <th>Last Click</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody
-          id="linksTableBody"
-          class="grey-similar inter-regular"
-        >
-          <tr>
-            <td
-              colspan="7"
-              class="empty-table"
-            >
-              <div class="empty-analytics">
-                No links available
-              </div>
-            </td>
-          </tr>
-        </tbody>
-
-      </table>
-
-    </div>
-
-  </div>
-</section>
-           <section id="analyticsSection" class="page_section analytics active_section">
-
-  <div class="flex-20 centralize analytics-header">
-
-    <div class="analytics-title-wrap">
-      <div class="analytics-header-inner-items">
-        <h1 class="inter-bold" id="analyticsTitle">
-          Overview
-        </h1>
-
-        <div class="overview_header_items">
-          <button
-            id="backToOverallAnalyticsBtn"
-            class="analytics-back-btn inter-bold"
-            type="button"
-            hidden
-          >
-            <span class="material-symbols-outlined">
-              arrow_back
-            </span>
-            Back to Links
-          </button>
-
-       
-        </div>
-      </div>
-    </div>
-
-    <button
-      class="analytics-sync-btn"
-      title="Refresh Analytics"
-      aria-label="Refresh Analytics"
-      type="button"
-    >
-      <span class="material-symbols-outlined">
-        sync
-      </span>
-    </button>
-
-  </div>
-
-  <div class="analyticsInnerWrap">
-
-    <div class="stats-grid white">
-
-      <div class="stat-card inter-bold">
-        <h2 id="totalClicks">0</h2>
-        <h4 class="inter-bold">Total Clicks</h4>
-      </div>
-
-      <div class="stat-card inter-bold">
-        <h2 id="uniqueVisitors">0</h2>
-        <h4 class="inter-bold">Unique Visitors</h4>
-      </div>
-
-      <div class="stat-card inter-bold">
-        <div id="topRegion" class="region-title">
-          <div class="flex-5 centralize">
-            <span
-              id="regionFlag"
-              class="material-symbols-outlined"
-            ></span>
-
-            <h2 id="regionName">—</h2>
-          </div>
-        </div>
-
-        <h4 class="inter-bold">Top Region</h4>
-      </div>
-
-      <div class="stat-card inter-bold">
-        <h2 id="avgRedirectTime">0ms</h2>
-        <h4 class="inter-bold">Avg Redirect Time</h4>
-      </div>
-
-    </div>
-
-    <div class="flex-20">
-      <div class="analytics-grid-row">
-
-        <div class="analytics-card chart-card-white">
-
-          <div class="analytics-card-header">
-            <div>
-              <h2
-                id="chartTitle"
-                class="analytics-card-title inter-bold"
-              >
-                Click Analytics
-              </h2>
-            </div>
-
-            <div class="analytics-range-wrap">
-              <div
-                id="dropdownSkeleton"
-                hidden
-              ></div>
-
-              <select
-                id="analyticsRange"
-                class="analytics-chart-select"
-              >
-                <option value="7">Last 7 Days</option>
-                <option value="30" selected>Last 30 Days</option>
-                <option value="90">Last 90 Days</option>
-                <option value="all">All Time</option>
-              </select>
-            </div>
-          </div>
-
-          <div id="chartSkeletonContainer">
-            <div
-              id="chartRangeLoader"
-              class="chart-range-loader"
-              style="display: none;"
-            ></div>
-
-            <canvas id="clickChart2"></canvas>
-          </div>
-
-        </div>
-
-        <div class="analytics-card geo-card-white">
-
-          <div class="analytics-card-header">
-            <h2 class="analytics-card-title ga-tag inter-bold">
-              Geographic Analytics
-            </h2>
-          </div>
-
-          <div class="map-wrapper">
-            <div
-              id="mapLoader"
-              class="map-loader"
-              style="display: none;"
-            ></div>
-
-            <div id="worldMap"></div>
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-
-    <div class="flex-20 analytics-metric-grid">
-
-      <div class="region_card inter-bold">
-        <h3 class="inter-bold">Traffic Sources</h3>
-        <div id="trafficSourcesContainer"></div>
-      </div>
-
-      <div class="region_card inter-bold white">
-        <h3 class="inter-bold white">Browser Analytics</h3>
-        <div id="browserAnalyticsContainer"></div>
-      </div>
-
-      <div class="region_card inter-bold white">
-        <h3 class="inter-bold white">OS Analytics</h3>
-        <div id="osAnalyticsContainer"></div>
-      </div>
-
-    </div>
-
-    <div class="flex-20-col">
-
-      <div class="region_card inter-bold white">
-        <h3 class="inter-bold white">Top Performing Links</h3>
-        <div id="topLinksContainer"></div>
-      </div>
-
-      <div class="region_card inter-bold white">
-        <h3 class="inter-bold white">Recent Activity Feed</h3>
-        <div id="recentActivityContainer"></div>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-          <section
-  id="settingsSection"
-  class="page_section settings-section"
->
-  <div class="flex-20 centralize analytics-header">
-    <div class="analytics-title-wrap">
-      <h1 class="inter-bold"   id="settingsSectionTitle">
-        Settings
-      </h1>
-
-      
-    </div>
-
-    <button
-      class="settings-sync-btn"
-      title="Refresh Settings"
-      aria-label="Refresh Settings"
-      type="button"
-    >
-      <span class="material-symbols-outlined">
-        sync
-      </span>
-    </button>
-  </div>
-
-  <div class="settings-inner">
-    <div class="settings-grid">
-
-      <div class="settings-card">
-        <div class="settings-card-header">
-          <div>
-            <h2 id="accountSettingsTitle" class="inter-bold">
-              Account Settings
-            </h2>
-
-            <p id="accountSettingsDesc" class="inter-regular">
-              Update your profile information.
-            </p>
-          </div>
-
-          <span class="material-symbols-outlined">
-            person
-          </span>
-        </div>
-
-        <div class="settings-form">
-          <label id="fullNameLabel" class="inter-bold">
-            Full Name
-          </label>
-
-          <input
-            id="settingsFullName"
-            class="inter-regular"
-            type="text"
-            autocomplete="name"
-            placeholder="Your full name"
-          >
-
-          <label id="usernameLabel" class="inter-bold">
-            Username
-          </label>
-
-          <input
-            id="settingsUsername"
-            class="inter-regular"
-            type="text"
-            autocomplete="off"
-            placeholder="username"
-          >
-
-          <button
-            id="saveAccountSettingsBtn"
-            class="settings-primary-btn inter-bold"
-            type="button"
-          >
-            Save Account
-          </button>
-        </div>
-      </div>
-
-      <div class="settings-card">
-        <div class="settings-card-header">
-          <div>
-            <h2 id="securityTitle" class="inter-bold">
-              Security
-            </h2>
-
-            <p id="securityDesc" class="inter-regular">
-              Change your account password.
-            </p>
-          </div>
-
-          <span class="material-symbols-outlined">
-            lock
-          </span>
-        </div>
-
-        <div class="settings-form">
-          <label id="currentPasswordLabel" class="inter-bold">
-            Current Password
-          </label>
-
-          <input
-            id="currentPassword"
-            class="inter-regular"
-            type="password"
-            autocomplete="current-password"
-            placeholder="Current password"
-          >
-
-          <label id="newPasswordLabel" class="inter-bold">
-            New Password
-          </label>
-
-          <input
-            id="newPassword"
-            class="inter-regular"
-            type="password"
-            autocomplete="new-password"
-            placeholder="New password"
-          >
-
-          <label id="confirmPasswordLabel" class="inter-bold">
-            Confirm Password
-          </label>
-
-          <input
-            id="confirmNewPassword"
-            class="inter-regular"
-            type="password"
-            autocomplete="new-password"
-            placeholder="Confirm new password"
-          >
-
-          <button
-            id="updatePasswordBtn"
-            class="settings-primary-btn inter-bold"
-            type="button"
-          >
-            Update Password
-          </button>
-        </div>
-      </div>
-
-      <div class="settings-card">
-        <div class="settings-card-header">
-          <div>
-            <h2 id="linkPreferencesTitle" class="inter-bold">
-              Link Preferences
-            </h2>
-
-            <p id="linkPreferencesDesc" class="inter-regular">
-              Set default behavior for new links.
-            </p>
-          </div>
-
-          <span class="material-symbols-outlined">
-            tune
-          </span>
-        </div>
-
-        <div class="settings-form">
-          <label id="defaultExpiryLabel" class="inter-bold">
-            Default Expiry
-          </label>
-
-          <select
-            id="defaultExpiry"
-            class="inter-regular"
-          >
-            <option value="never">Never Expire</option>
-            <option value="1hour">1 Hour</option>
-            <option value="12hours">12 Hours</option>
-            <option value="1day">1 Day</option>
-            <option value="7days">7 Days</option>
-            <option value="30days">30 Days</option>
-            <option value="90days">90 Days</option>
-          </select>
-
-          <label class="settings-toggle-row">
-            <div>
-              <span id="liveNotificationLabel" class="inter-bold">
-                Live Click Notifications
-              </span>
-
-              <p id="liveNotificationDesc" class="inter-regular">
-                Show toast when someone clicks your link.
-              </p>
-            </div>
-
-            <span class="settings-switch">
-              <input
-                id="liveNotifications"
-                type="checkbox"
-              >
-              <span></span>
-            </span>
-          </label>
-
-          <label class="settings-toggle-row">
-            <div>
-              <span id="autoRefreshLabel" class="inter-bold">
-                Analytics Auto Refresh
-              </span>
-
-              <p id="autoRefreshDesc" class="inter-regular">
-                Refresh analytics automatically.
-              </p>
-            </div>
-
-            <span class="settings-switch">
-              <input
-                id="analyticsAutoRefresh"
-                type="checkbox"
-              >
-              <span></span>
-            </span>
-          </label>
-
-          <button
-            id="savePreferencesBtn"
-            class="settings-primary-btn inter-bold"
-            type="button"
-          >
-            Save Preferences
-          </button>
-        </div>
-      </div>
-
-      <div class="settings-card">
-        <div class="settings-card-header">
-          <div>
-            <h2 id="dataPrivacyTitle" class="inter-bold">
-              Data & Privacy
-            </h2>
-
-            <p id="dataPrivacyDesc" class="inter-regular">
-              Export your link and analytics data.
-            </p>
-          </div>
-
-          <span class="material-symbols-outlined">
-            database
-          </span>
-        </div>
-
-        <div class="settings-actions">
-          <button
-            id="exportLinksBtn"
-            class="settings-secondary-btn inter-bold"
-            type="button"
-          >
-            Export Links CSV
-          </button>
-
-          <button
-            id="exportAnalyticsBtn"
-            class="settings-secondary-btn inter-bold"
-            type="button"
-          >
-            Export Analytics CSV
-          </button>
-        </div>
-      </div>
-
-      <div class="settings-card danger-zone">
-        <div class="settings-card-header">
-          <div>
-            <h2 id="dangerZoneTitle" class="inter-bold">
-              Danger Zone
-            </h2>
-
-            <p id="dangerZoneDesc" class="inter-regular">
-              Permanently delete your account and all links.
-            </p>
-          </div>
-
-          <span class="material-symbols-outlined">
-            warning
-          </span>
-        </div>
-
-        <button
-          id="deleteAccountBtn"
-          class="settings-danger-btn inter-bold"
-          type="button"
-        >
-          Delete Account
-        </button>
-      </div>
-
-    </div>
-  </div>
-</section>
-            
+            <section
+               id="linksSection"
+               class="links page_section flex-20-col"
+               >
+               <div class="flex-20 centralize analytics-header links-header">
+                  <div class="analytics-title-wrap">
+                     <div class="section-title-row">
+                       <button
+                        class="section-back-btn centralize"
+                        onclick="goBackSection()"
+                        type="button"
+                        >
+                     <span class="material-symbols-outlined">
+                     arrow_back
+                     </span>
+                     </button>
+                     <h1
+                        id="linksTitle"
+                        class="inter-bold"
+                        >
+                        Links
+                     </h1>
+                     </div>
+                    
+                     <span
+                        id="linksLastUpdated"
+                        class="analytics-last-updated inter-regular"
+                        >
+                     Updated just now
+                     </span>
+                  </div>
+                  <button
+                     class="links-sync-btn"
+                     title="Refresh Links"
+                     aria-label="Refresh Links"
+                     type="button"
+                     >
+                  <span class="material-symbols-outlined">
+                  sync
+                  </span>
+                  </button>
+               </div>
+               <div class="analyticsInnerWrap">
+                  <!-- Stats -->
+                  <div class="stats-grid">
+                     <div class="stat-card inter-bold">
+                        <h1 id="totalLinks">
+                           0
+                        </h1>
+                        <h4
+                           id="totalLinksLabel"
+                           class="inter-bold"
+                           >
+                           Total Links
+                        </h4>
+                     </div>
+                     <div class="stat-card inter-bold">
+                        <h1 id="activeLinks">
+                           0
+                        </h1>
+                        <h4
+                           id="activeLinksLabel"
+                           class="inter-bold"
+                           >
+                           Active
+                        </h4>
+                     </div>
+                     <div class="stat-card inter-bold">
+                        <h1 id="inactiveLinks">
+                           0
+                        </h1>
+                        <h4
+                           id="inactiveLinksLabel"
+                           class="inter-bold"
+                           >
+                           Inactive
+                        </h4>
+                     </div>
+                     <div class="stat-card inter-bold">
+                        <h1 id="expiredLinks">
+                           0
+                        </h1>
+                        <h4
+                           id="expiredLinksLabel"
+                           class="inter-bold"
+                           >
+                           Expired
+                        </h4>
+                     </div>
+                  </div>
+                  <!-- Controls -->
+                  <div
+                     id="linksControls"
+                     class="flex-20 w-100 search_container"
+                     >
+                     <div class="search-container">
+                        <span class="material-symbols-outlined search-icon">
+                        search
+                        </span>
+                        <input
+                           type="text"
+                           placeholder="Search links..."
+                           autocomplete="off"
+                           id="searcher"
+                           >
+                        <span
+                           class="material-symbols-outlined clear-icon"
+                           id="clearSearch"
+                           >
+                        close
+                        </span>
+                     </div>
+                     <div class="filter-box">
+                        <span class="material-symbols-outlined icon_filter">
+                        filter_alt
+                        </span>
+                        <select id="statusFilter">
+                           <option value="all" selected>
+                              All Links
+                           </option>
+                           <option value="active">
+                              Active
+                           </option>
+                           <option value="inactive">
+                              Inactive
+                           </option>
+                           <option value="expired">
+                              Expired
+                           </option>
+                        </select>
+                     </div>
+                     <div class="filter-box">
+                        <span class="material-symbols-outlined icon_filter">
+                        sort
+                        </span>
+                        <select id="sortFilter">
+                           <option value="newest" selected>
+                              Newest First
+                           </option>
+                           <option value="oldest">
+                              Oldest First
+                           </option>
+                           <option value="most-clicked">
+                              Most Clicked
+                           </option>
+                           <option value="least-clicked">
+                              Least Clicked
+                           </option>
+                           <option value="recently-clicked">
+                              Recently Clicked
+                           </option>
+                        </select>
+                     </div>
+                     <button
+                        class="link_maker white flex-5 centralize open_maker"
+                        type="button"
+                        >
+                        <span class="material-symbols-outlined">
+                        add
+                        </span>
+                        <p class="inter-bold">
+                           Create Link
+                        </p>
+                     </button>
+                  </div>
+                  <!-- Table -->
+                  <div class="table-wrapper">
+                     <table class="links_table">
+                        <thead
+                           id="linksTableHead"
+                           class="inter-bold grey-similar"
+                           >
+                           <tr>
+                              <th>Short Link</th>
+                              <th>Original URL</th>
+                              <th>Clicks</th>
+                              <th>Status</th>
+                              <th>Created</th>
+                              <th>Last Click</th>
+                              <th>Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody
+                           id="linksTableBody"
+                           class="grey-similar inter-regular"
+                           >
+                           <tr>
+                              <td
+                                 colspan="7"
+                                 class="empty-table"
+                                 >
+                                 <div class="empty-analytics">
+                                    No links available
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </section>
+            <section id="analyticsSection" class="page_section analytics active_section">
+               <div class="flex-20 centralize analytics-header">
+                  <div class="analytics-title-wrap">
+                     <div class="analytics-header-inner-items">
+                        <div class="section-title-row">
+                           <button
+                              class="section-back-btn centralize"
+                              onclick="goBackSection()"
+                              type="button"
+                              >
+                           <span class="material-symbols-outlined">
+                           arrow_back
+                           </span>
+                           </button>
+                           <h1>Overview</h1>
+                        </div>
+                        <div class="overview_header_items">
+                           <button
+                              id="backToOverallAnalyticsBtn"
+                              class="analytics-back-btn inter-bold"
+                              type="button"
+                              hidden
+                              >
+                           <span class="material-symbols-outlined">
+                           arrow_back
+                           </span>
+                           Back to Links
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+                  <button
+                     class="analytics-sync-btn"
+                     title="Refresh Analytics"
+                     aria-label="Refresh Analytics"
+                     type="button"
+                     >
+                  <span class="material-symbols-outlined">
+                  sync
+                  </span>
+                  </button>
+               </div>
+               <div class="analyticsInnerWrap">
+                  <div class="stats-grid white">
+                     <div class="stat-card inter-bold">
+                        <h2 id="totalClicks">0</h2>
+                        <h4 class="inter-bold">Total Clicks</h4>
+                     </div>
+                     <div class="stat-card inter-bold">
+                        <h2 id="uniqueVisitors">0</h2>
+                        <h4 class="inter-bold">Unique Visitors</h4>
+                     </div>
+                     <div class="stat-card inter-bold">
+                        <div id="topRegion" class="region-title">
+                           <div class="flex-5 centralize">
+                              <span
+                                 id="regionFlag"
+                                 class="material-symbols-outlined"
+                                 ></span>
+                              <h2 id="regionName">—</h2>
+                           </div>
+                        </div>
+                        <h4 class="inter-bold">Top Region</h4>
+                     </div>
+                     <div class="stat-card inter-bold">
+                        <h2 id="avgRedirectTime">0ms</h2>
+                        <h4 class="inter-bold">Avg Redirect Time</h4>
+                     </div>
+                  </div>
+                  <div class="flex-20">
+                     <div class="analytics-grid-row">
+                        <div class="analytics-card chart-card-white">
+                           <div class="analytics-card-header">
+                              <div>
+                                 <h2
+                                    id="chartTitle"
+                                    class="analytics-card-title inter-bold"
+                                    >
+                                    Click Analytics
+                                 </h2>
+                              </div>
+                              <div class="analytics-range-wrap">
+                                 <div
+                                    id="dropdownSkeleton"
+                                    hidden
+                                    ></div>
+                                 <select
+                                    id="analyticsRange"
+                                    class="analytics-chart-select"
+                                    >
+                                    <option value="7">Last 7 Days</option>
+                                    <option value="30" selected>Last 30 Days</option>
+                                    <option value="90">Last 90 Days</option>
+                                    <option value="all">All Time</option>
+                                 </select>
+                              </div>
+                           </div>
+                           <div id="chartSkeletonContainer">
+                              <div
+                                 id="chartRangeLoader"
+                                 class="chart-range-loader"
+                                 style="display: none;"
+                                 ></div>
+                              <canvas id="clickChart2"></canvas>
+                           </div>
+                        </div>
+                        <div class="analytics-card geo-card-white">
+                           <div class="analytics-card-header">
+                              <h2 class="analytics-card-title ga-tag inter-bold">
+                                 Geographic Analytics
+                              </h2>
+                           </div>
+                           <div class="map-wrapper">
+                              <div
+                                 id="mapLoader"
+                                 class="map-loader"
+                                 style="display: none;"
+                                 ></div>
+                              <div id="worldMap"></div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="flex-20 analytics-metric-grid">
+                     <div class="region_card inter-bold">
+                        <h3 class="inter-bold">Traffic Sources</h3>
+                        <div id="trafficSourcesContainer"></div>
+                     </div>
+                     <div class="region_card inter-bold white">
+                        <h3 class="inter-bold white">Browser Analytics</h3>
+                        <div id="browserAnalyticsContainer"></div>
+                     </div>
+                     <div class="region_card inter-bold white">
+                        <h3 class="inter-bold white">OS Analytics</h3>
+                        <div id="osAnalyticsContainer"></div>
+                     </div>
+                  </div>
+                  <div class="flex-20-col">
+                     <div class="region_card inter-bold white">
+                        <h3 class="inter-bold white">Top Performing Links</h3>
+                        <div id="topLinksContainer"></div>
+                     </div>
+                     <div class="region_card inter-bold white">
+                        <h3 class="inter-bold white">Recent Activity Feed</h3>
+                        <div id="recentActivityContainer"></div>
+                     </div>
+                  </div>
+               </div>
+            </section>
+            <section
+               id="settingsSection"
+               class="page_section settings-section"
+               >
+               <div class="flex-20 centralize analytics-header">
+                  <div class="analytics-title-wrap">
+                     <div class="section-title-row">
+                        <button
+                           class="section-back-btn centralize"
+                           onclick="goBackSection()"
+                           type="button"
+                           >
+                        <span class="material-symbols-outlined">
+                        arrow_back
+                        </span>
+                        </button>
+                        <h1>Settings</h1>
+                     </div>
+                  </div>
+                  <button
+                     class="settings-sync-btn"
+                     title="Refresh Settings"
+                     aria-label="Refresh Settings"
+                     type="button"
+                     >
+                  <span class="material-symbols-outlined">
+                  sync
+                  </span>
+                  </button>
+               </div>
+               <div class="settings-inner">
+                  <div class="settings-grid">
+                     <div class="settings-card">
+                        <div class="settings-card-header">
+                           <div>
+                              <h2 id="accountSettingsTitle" class="inter-bold">
+                                 Account Settings
+                              </h2>
+                              <p id="accountSettingsDesc" class="inter-regular">
+                                 Update your profile information.
+                              </p>
+                           </div>
+                           <span class="material-symbols-outlined">
+                           person
+                           </span>
+                        </div>
+                        <div class="settings-form">
+                           <label id="fullNameLabel" class="inter-bold">
+                           Full Name
+                           </label>
+                           <input
+                              id="settingsFullName"
+                              class="inter-regular"
+                              type="text"
+                              autocomplete="name"
+                              placeholder="Your full name"
+                              >
+                           <label id="usernameLabel" class="inter-bold">
+                           Username
+                           </label>
+                           <input
+                              id="settingsUsername"
+                              class="inter-regular"
+                              type="text"
+                              autocomplete="off"
+                              placeholder="username"
+                              >
+                           <button
+                              id="saveAccountSettingsBtn"
+                              class="settings-primary-btn inter-bold"
+                              type="button"
+                              >
+                           Save Account
+                           </button>
+                        </div>
+                     </div>
+                     <div class="settings-card">
+                        <div class="settings-card-header">
+                           <div>
+                              <h2 id="securityTitle" class="inter-bold">
+                                 Security
+                              </h2>
+                              <p id="securityDesc" class="inter-regular">
+                                 Change your account password.
+                              </p>
+                           </div>
+                           <span class="material-symbols-outlined">
+                           lock
+                           </span>
+                        </div>
+                        <div class="settings-form">
+                           <label id="currentPasswordLabel" class="inter-bold">
+                           Current Password
+                           </label>
+                           <input
+                              id="currentPassword"
+                              class="inter-regular"
+                              type="password"
+                              autocomplete="current-password"
+                              placeholder="Current password"
+                              >
+                           <label id="newPasswordLabel" class="inter-bold">
+                           New Password
+                           </label>
+                           <input
+                              id="newPassword"
+                              class="inter-regular"
+                              type="password"
+                              autocomplete="new-password"
+                              placeholder="New password"
+                              >
+                           <label id="confirmPasswordLabel" class="inter-bold">
+                           Confirm Password
+                           </label>
+                           <input
+                              id="confirmNewPassword"
+                              class="inter-regular"
+                              type="password"
+                              autocomplete="new-password"
+                              placeholder="Confirm new password"
+                              >
+                           <button
+                              id="updatePasswordBtn"
+                              class="settings-primary-btn inter-bold"
+                              type="button"
+                              >
+                           Update Password
+                           </button>
+                        </div>
+                     </div>
+                     <div class="settings-card">
+                        <div class="settings-card-header">
+                           <div>
+                              <h2 id="linkPreferencesTitle" class="inter-bold">
+                                 Link Preferences
+                              </h2>
+                              <p id="linkPreferencesDesc" class="inter-regular">
+                                 Set default behavior for new links.
+                              </p>
+                           </div>
+                           <span class="material-symbols-outlined">
+                           tune
+                           </span>
+                        </div>
+                        <div class="settings-form">
+                           <label id="defaultExpiryLabel" class="inter-bold">
+                           Default Expiry
+                           </label>
+                           <select
+                              id="defaultExpiry"
+                              class="inter-regular"
+                              >
+                              <option value="never">Never Expire</option>
+                              <option value="1hour">1 Hour</option>
+                              <option value="12hours">12 Hours</option>
+                              <option value="1day">1 Day</option>
+                              <option value="7days">7 Days</option>
+                              <option value="30days">30 Days</option>
+                              <option value="90days">90 Days</option>
+                           </select>
+                           <label class="settings-toggle-row">
+                              <div>
+                                 <span id="liveNotificationLabel" class="inter-bold">
+                                 Live Click Notifications
+                                 </span>
+                                 <p id="liveNotificationDesc" class="inter-regular">
+                                    Show toast when someone clicks your link.
+                                 </p>
+                              </div>
+                              <span class="settings-switch">
+                              <input
+                                 id="liveNotifications"
+                                 type="checkbox"
+                                 >
+                              <span></span>
+                              </span>
+                           </label>
+                           <label class="settings-toggle-row">
+                              <div>
+                                 <span id="autoRefreshLabel" class="inter-bold">
+                                 Analytics Auto Refresh
+                                 </span>
+                                 <p id="autoRefreshDesc" class="inter-regular">
+                                    Refresh analytics automatically.
+                                 </p>
+                              </div>
+                              <span class="settings-switch">
+                              <input
+                                 id="analyticsAutoRefresh"
+                                 type="checkbox"
+                                 >
+                              <span></span>
+                              </span>
+                           </label>
+                           <button
+                              id="savePreferencesBtn"
+                              class="settings-primary-btn inter-bold"
+                              type="button"
+                              >
+                           Save Preferences
+                           </button>
+                        </div>
+                     </div>
+                     <div class="settings-card">
+                        <div class="settings-card-header">
+                           <div>
+                              <h2 id="dataPrivacyTitle" class="inter-bold">
+                                 Data & Privacy
+                              </h2>
+                              <p id="dataPrivacyDesc" class="inter-regular">
+                                 Export your link and analytics data.
+                              </p>
+                           </div>
+                           <span class="material-symbols-outlined">
+                           database
+                           </span>
+                        </div>
+                        <div class="settings-actions">
+                           <button
+                              id="exportLinksBtn"
+                              class="settings-secondary-btn inter-bold"
+                              type="button"
+                              >
+                           Export Links CSV
+                           </button>
+                           <button
+                              id="exportAnalyticsBtn"
+                              class="settings-secondary-btn inter-bold"
+                              type="button"
+                              >
+                           Export Analytics CSV
+                           </button>
+                        </div>
+                     </div>
+                     <div class="settings-card danger-zone">
+                        <div class="settings-card-header">
+                           <div>
+                              <h2 id="dangerZoneTitle" class="inter-bold">
+                                 Danger Zone
+                              </h2>
+                              <p id="dangerZoneDesc" class="inter-regular">
+                                 Permanently delete your account and all links.
+                              </p>
+                           </div>
+                           <span class="material-symbols-outlined">
+                           warning
+                           </span>
+                        </div>
+                        <button
+                           id="deleteAccountBtn"
+                           class="settings-danger-btn inter-bold"
+                           type="button"
+                           >
+                        Delete Account
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            </section>
          </div>
       </div>
       <div class="centralize_loader">
@@ -775,127 +674,108 @@
          </div>
       </div>
       <div class="centralize_maker">
-     <div class="maker_box">
-
-  <div class="maker-header">
-    <div>
-      <h2 class="inter-bold">Create New Link</h2>
-      <p class="inter-regular">
-        Shorten a long URL and optionally customize it.
-      </p>
-    </div>
-
-    <button type="button" class="maker-close-btn close_maker">
-      <span class="material-symbols-outlined">close</span>
-    </button>
-  </div>
-
-  <div class="maker-field">
-    <label for="longUrl" class="inter-bold">
-      Long URL
-    </label>
-
-    <div class="maker-input-wrap">
-      <span class="material-symbols-outlined maker-icon">
-        link
-      </span>
-
-      <input
-        type="text"
-        id="longUrl"
-        placeholder="https://example.com/very-long-url"
-        autocomplete="off"
-        class="inter-regular"
-      >
-    </div>
-  </div>
-
-  <div class="maker-field">
-    <label for="customAlias" class="inter-bold">
-      Custom Alias
-      <span class="inter-regular">(optional)</span>
-    </label>
-
-    <div class="maker-input-wrap">
-      <span class="material-symbols-outlined maker-icon">
-        alternate_email
-      </span>
-
-      <input
-        type="text"
-        id="customAlias"
-        placeholder="my-link"
-        autocomplete="off"
-        class="inter-regular"
-      >
-    </div>
-  </div>
-
-  <div class="maker-field">
-    <label for="expiry" class="inter-bold">
-      Expiry
-    </label>
-
-    <select
-      id="expiry"
-      class="custom-select inter-regular"
-    >
-      <option value="never">Never Expire</option>
-      <option value="1day">1 Day</option>
-      <option value="7days">7 Days</option>
-      <option value="30days">30 Days</option>
-      <option value="custom">Custom Date</option>
-    </select>
-  </div>
-
-  <input
-    type="date"
-    id="hiddenDate"
-    style="display:none;"
-  >
-
-  <div class="maker-preview">
-    <p class="preview-title inter-bold">
-      Preview
-    </p>
-
-    <div class="maker-preview-link">
-      <span class="material-symbols-outlined">
-        link_2
-      </span>
-
-      <p
-        id="previewLink"
-        class="inter-regular"
-      ></p>
-    </div>
-  </div>
-
-  <div class="maker-actions">
-    <button
-      type="button"
-      class="maker-secondary-btn close_maker inter-bold"
-    >
-      Cancel
-    </button>
-
-    <button
-      type="button"
-      class="maker-primary-btn link_maker_2 inter-bold"
-    >
-      <span class="material-symbols-outlined">
-        check
-      </span>
-
-      Create Link
-    </button>
-  </div>
-
-</div>
-</div>
+         <div class="maker_box">
+            <div class="maker-header">
+               <div>
+                  <h2 class="inter-bold">Create New Link</h2>
+                  <p class="inter-regular">
+                     Shorten a long URL and optionally customize it.
+                  </p>
+               </div>
+               <button type="button" class="maker-close-btn close_maker">
+               <span class="material-symbols-outlined">close</span>
+               </button>
+            </div>
+            <div class="maker-field">
+               <label for="longUrl" class="inter-bold">
+               Long URL
+               </label>
+               <div class="maker-input-wrap">
+                  <span class="material-symbols-outlined maker-icon">
+                  link
+                  </span>
+                  <input
+                     type="text"
+                     id="longUrl"
+                     placeholder="https://example.com/very-long-url"
+                     autocomplete="off"
+                     class="inter-regular"
+                     >
+               </div>
+            </div>
+            <div class="maker-field">
+               <label for="customAlias" class="inter-bold">
+               Custom Alias
+               <span class="inter-regular">(optional)</span>
+               </label>
+               <div class="maker-input-wrap">
+                  <span class="material-symbols-outlined maker-icon">
+                  alternate_email
+                  </span>
+                  <input
+                     type="text"
+                     id="customAlias"
+                     placeholder="my-link"
+                     autocomplete="off"
+                     class="inter-regular"
+                     >
+               </div>
+            </div>
+            <div class="maker-field">
+               <label for="expiry" class="inter-bold">
+               Expiry
+               </label>
+               <select
+                  id="expiry"
+                  class="custom-select inter-regular"
+                  >
+                  <option value="never">Never Expire</option>
+                  <option value="1day">1 Day</option>
+                  <option value="7days">7 Days</option>
+                  <option value="30days">30 Days</option>
+                  <option value="custom">Custom Date</option>
+               </select>
+            </div>
+            <input
+               type="date"
+               id="hiddenDate"
+               style="display:none;"
+               >
+            <div class="maker-preview">
+               <p class="preview-title inter-bold">
+                  Preview
+               </p>
+               <div class="maker-preview-link">
+                  <span class="material-symbols-outlined">
+                  link_2
+                  </span>
+                  <p
+                     id="previewLink"
+                     class="inter-regular"
+                     ></p>
+               </div>
+            </div>
+            <div class="maker-actions">
+               <button
+                  type="button"
+                  class="maker-secondary-btn close_maker inter-bold"
+                  >
+               Cancel
+               </button>
+               <button
+                  type="button"
+                  class="maker-primary-btn link_maker_2 inter-bold"
+                  >
+               <span class="material-symbols-outlined">
+               check
+               </span>
+               Create Link
+               </button>
+            </div>
+         </div>
+      </div>
+      <script src="../script.js"></script>
    </body>
-         <script src="../script.js"></script>
-
 </html>
 <!--Dashboard
    Links
