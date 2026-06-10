@@ -1,5 +1,9 @@
 const jwt = require("jsonwebtoken");
 
+const {
+  formatCompactNumber
+} = require("../utils/numberFormatter");
+
 function initializeSocket(io) {
   io.use((socket, next) => {
     try {
@@ -19,10 +23,11 @@ function initializeSocket(io) {
         );
       }
 
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET
-      );
+      const decoded =
+        jwt.verify(
+          token,
+          process.env.JWT_SECRET
+        );
 
       socket.user = decoded;
 
@@ -48,6 +53,18 @@ function initializeSocket(io) {
       socket.id
     );
 
+    // Example emit
+    socket.emit(
+      "liveClick",
+      {
+        shortCode: "abc123",
+        totalClicks:
+          formatCompactNumber(5423),
+        uniqueVisitors:
+          formatCompactNumber(1267)
+      }
+    );
+
     socket.on(
       "disconnect",
       () => {
@@ -60,4 +77,5 @@ function initializeSocket(io) {
   });
 }
 
-module.exports = initializeSocket;
+module.exports =
+  initializeSocket;
