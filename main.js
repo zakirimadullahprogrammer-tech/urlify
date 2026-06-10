@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const http = require("http");
+const path = require("path");
 const { Server } = require("socket.io");
 
 const authRoutes = require("./routes/auth.routes");
@@ -28,6 +29,7 @@ const io = new Server(server, {
 app.set("trust proxy", 1);
 app.set("io", io);
 
+// Middleware
 app.use(cors({
   origin: true,
   credentials: true
@@ -35,22 +37,29 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static("public"));
 
+// Serve static files correctly
+app.use(express.static(path.join(__dirname, "public")));
+
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/links", linksRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/qr", qrRoutes);
 app.use("/api/analytics", analyticsRoutes);
+
+// Page Routes
 app.use("/pages", pageRoutes);
 
+// Homepage route
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+// Initialize sockets
 initializeSocket(io);
 
-// Keep redirect route LAST because /:shortCode can catch everything
+// IMPORTANT: Keep redirect route LAST
 app.use("/", redirectRoutes);
 
 // Local development only
@@ -62,5 +71,5 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-// Required for Vercel
+// Export for Vercel
 module.exports = app;
