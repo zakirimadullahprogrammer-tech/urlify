@@ -7,6 +7,90 @@
 
 A production-style URL shortener and analytics platform inspired by Bitly, built with performance, scalability, and real-time analytics in mind.
 
+## Screenshots
+
+### Dashboard Overview
+
+Production-style analytics dashboard with real-time metrics, click tracking, geographic insights, browser analytics, and performance monitoring.
+
+#### Overview – Metrics & Charts
+Shows total clicks, unique visitors, redirect performance, click analytics, and geographic analytics.
+
+![Overview Dashboard](./screenshots/one.png)
+
+#### Overview – Traffic & Performance Insights
+Shows traffic sources, browser analytics, OS analytics, and top-performing links.
+
+![Analytics Insights](./screenshots/two.png)
+
+#### Overview – Recent Activity Feed
+Shows real-time click activity with browser, device, region, and traffic source tracking.
+
+![Recent Activity](./screenshots/three.png)
+
+---
+
+### Link Management
+
+Comprehensive link management with search, filtering, sorting, editing, QR generation, and link actions.
+
+#### Links Dashboard
+Shows searchable link management with filtering and analytics access.
+
+![Links Section](./screenshots/four.png)
+
+#### Links Table View
+Horizontal scrollable table for managing large link datasets.
+
+![Links Table](./screenshots/five.png)
+
+---
+
+### Individual Link Analytics
+
+Detailed analytics for a specific shortened URL including click trends, geographic insights, and traffic breakdowns.
+
+#### Link Analytics – Metrics Overview
+Shows click statistics, visitors, redirect performance, and top region for a specific link.
+
+![Link Analytics Overview](./screenshots/six.png)
+
+#### Link Analytics – Charts & Geographic Insights
+Shows click analytics graph and geographic analytics for an individual link.
+
+![Link Analytics Charts](./screenshots/seven.png)
+
+#### Link Analytics – Traffic Breakdown
+Shows browser analytics, OS analytics, and traffic source insights.
+
+![Link Analytics Breakdown](./screenshots/eight.png)
+
+#### Link Analytics – Recent Click Activity
+Shows recent click feed for a specific shortened URL.
+
+![Recent Link Activity](./screenshots/nine.png)
+
+---
+
+### Settings & Preferences
+
+User settings for account management, authentication, preferences, exports, and privacy.
+
+#### Account & Security Settings
+Manage profile details and password updates.
+
+![Account Settings](./screenshots/ten.png)
+
+#### Preferences & Data Privacy
+Configure link preferences, notifications, auto refresh, and exports.
+
+![Preferences](./screenshots/eleven.png)
+
+#### Danger Zone
+Secure account deletion and irreversible actions.
+
+![Danger Zone](./screenshots/twelve.png)
+
 ## Key Features
 
 ### Smart URL Management
@@ -220,10 +304,6 @@ Stores user preferences and analytics settings.
 * Building async analytics pipelines
 * Handling authentication securely with JWT cookies
 * Structuring analytics dashboards from raw event data
-
-## Screenshots
-
-(Add dashboard screenshots here)
 
 ## API Endpoints
 
