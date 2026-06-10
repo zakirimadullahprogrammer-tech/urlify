@@ -41,6 +41,16 @@ CREATE TABLE click_analytics (
 
     redirect_time_ms NUMERIC(10,2)    -- redirect time
 );
+
+CREATE TABLE user_settings (
+  user_id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  default_expiry VARCHAR(30) DEFAULT 'never',
+  live_notifications BOOLEAN DEFAULT TRUE,
+  analytics_auto_refresh BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 CREATE TABLE api_keys (
   id SERIAL PRIMARY KEY,
   user_id INT REFERENCES users(id) ON DELETE CASCADE,
@@ -68,12 +78,4 @@ CREATE TABLE webhooks (
   target_url TEXT NOT NULL,
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT NOW()
-);
-CREATE TABLE user_settings (
-  user_id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-  default_expiry VARCHAR(30) DEFAULT 'never',
-  live_notifications BOOLEAN DEFAULT TRUE,
-  analytics_auto_refresh BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
