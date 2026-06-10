@@ -5435,5 +5435,6 @@ select:focus,
   background-color: transparent;
   border: none;
     color: #2563eb;
+    font-weight: bold;
 
 }

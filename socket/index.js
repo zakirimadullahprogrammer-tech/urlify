@@ -53,17 +53,7 @@ function initializeSocket(io) {
       socket.id
     );
 
-    // Example emit
-    socket.emit(
-      "liveClick",
-      {
-        shortCode: "abc123",
-        totalClicks:
-          formatCompactNumber(5423),
-        uniqueVisitors:
-          formatCompactNumber(1267)
-      }
-    );
+  
 
     socket.on(
       "disconnect",

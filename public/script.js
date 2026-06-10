@@ -674,13 +674,22 @@ async function getLinksFromAPI() {
     setSyncButtonState(linksSyncBtn, false);
   }
 }
+document
+  .getElementById("analyticsAutoRefresh")
+  ?.addEventListener("change", e => {
+    analyticsAutoRefreshEnabled = e.target.checked;
+
+    if (analyticsAutoRefreshEnabled) {
+      startAnalyticsAutoRefresh();
+    } else {
+      stopAnalyticsAutoRefresh();
+    }
+  });
 function refreshAnalyticsAfterLiveClick() {
   if (!analyticsAutoRefreshEnabled) return;
-  if (analyticsLoading) return;
   if (document.hidden) return;
 
-  const analyticsSection =
-    document.getElementById("analyticsSection");
+  const analyticsSection = document.getElementById("analyticsSection");
 
   const isAnalyticsVisible =
     analyticsSection?.classList.contains("active_section");
@@ -693,24 +702,22 @@ function refreshAnalyticsAfterLiveClick() {
   clearTimeout(liveRefreshTimer);
 
   liveRefreshTimer = setTimeout(async () => {
+    if (analyticsLoading) {
+      analyticsNeedsRefresh = true;
+      return;
+    }
+
     try {
-  analyticsLoading = true;
+      analyticsLoading = true;
 
-  showAnalyticsSkeletons();
+      await loadAnalytics(true, true);
 
-  await loadAnalytics(true, false);
+      liveClickCount = 0;
+      analyticsNeedsRefresh = false;
 
-  liveClickCount = 0;
-  analyticsNeedsRefresh = false;
-
-  console.log("Live click count reset:", liveClickCount);
-
-} catch (error) {
-  console.log("Live refresh failed:", error);
-
-} finally {
-  analyticsLoading = false;
-} 
+    } finally {
+      analyticsLoading = false;
+    }
   }, 700);
 }
 function applyFiltersAndSorting() {
@@ -3208,7 +3215,10 @@ function initializeSocket() {
   socket.on("liveClick", (data) => {
   liveClickCount++;
 
-  refreshAnalyticsAfterLiveClick();
+  // Refresh only if user enabled auto live refresh
+  if (analyticsAutoRefreshEnabled) {
+    refreshAnalyticsAfterLiveClick();
+  }
 
   if (!liveNotificationsEnabled) return;
 
@@ -3218,7 +3228,9 @@ function initializeSocket() {
 
   activeToast = showToast(
     "Live click",
-    `/${data.shortCode} was clicked • ${liveClickCount} new click${liveClickCount > 1 ? "s" : ""} since last sync`,
+    `/${data.shortCode} was clicked • ${liveClickCount} new click${
+      liveClickCount > 1 ? "s" : ""
+    } since last sync`,
     "live"
   );
 });
