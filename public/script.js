@@ -5498,3 +5498,36 @@ window.openAnalyticsByShortCode = async function (event, shortCode) {
 
   await openLinkAnalytics(event, selectedLink.id);
 };
+async function apiFetch(
+  url,
+  options = {}
+) {
+  const response =
+    await fetch(url, {
+      credentials:
+        "include",
+      ...options
+    });
+
+  if (
+    response.status === 401
+  ) {
+    showToast(
+      "Session expired",
+      "Please login again",
+      "info"
+    );
+
+    setTimeout(() => {
+      window.location.replace(
+        "/pages/login"
+      );
+    }, 500);
+
+    throw new Error(
+      "Unauthorized"
+    );
+  }
+
+  return response;
+}

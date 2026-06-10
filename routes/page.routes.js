@@ -1,4 +1,10 @@
-const express = require("express");
+const express =
+  require("express");
+
+const requireAuth =
+  require(
+    "../middleware/requireAuth"
+  );
 
 const {
   redirectIfAuthenticated
@@ -14,7 +20,8 @@ const {
   "../controllers/page.controller"
 );
 
-const router = express.Router();
+const router =
+  express.Router();
 
 router.get(
   "/login",
@@ -34,4 +41,5 @@ router.get(
   dashboardPage
 );
 
-module.exports = router;
+module.exports =
+  router;
