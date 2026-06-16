@@ -62,14 +62,12 @@ initializeSocket(io);
 // IMPORTANT: Keep redirect route LAST
 app.use("/", redirectRoutes);
 
-// Local development only
-if (process.env.NODE_ENV !== "production") {
-  server.listen(8080, "0.0.0.0", () => {
-    console.log("=> URLIFY SOFTWARE DEVELOPED BY ZAKIR IMADULLAH");
-    console.log("=> HTTP Server listening on PORT 8080");
-    console.log("=> WebSocket Server Ready");
-  });
-}
+const PORT = process.env.PORT || 8080;
 
-// Export for Vercel
+server.listen(PORT, "0.0.0.0", () => {
+  console.log("=> URLIFY SOFTWARE DEVELOPED BY ZAKIR IMADULLAH");
+  console.log(`=> HTTP Server listening on PORT ${PORT}`);
+  console.log("=> WebSocket Server Ready");
+});
+
 module.exports = app;
