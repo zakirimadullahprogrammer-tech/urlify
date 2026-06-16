@@ -2768,7 +2768,7 @@ updateAnalyticsModeUI(data);
 
   if (!silent) {
     showToast(
-      "Unable to refresh analytics",
+      "Unable to refresh overview",
       "Please check your internet connection.",
       "error"
     );
@@ -3803,18 +3803,39 @@ function updateAnalyticsModeUI(data) {
   }
 }
 
-async function backToLinksSection() {
+async function backToPreviousSectionFromAnalytics() {
   window.currentAnalyticsMode = "overall";
   window.currentAnalyticsLinkId = null;
 
   setAnalyticsHeaderMode("overall");
 
-  await switchDashboardSection("linksSection");
+  const previousSectionId = historyTop?.sectionId || "linksSection";
+
+  if (historyTop) {
+    historyTop = historyTop.prev;
+  }
+
+  showSection(previousSectionId);
+
+  currentSectionId = previousSectionId;
+  updateBackButtons();
+
+  if (previousSectionId === "analyticsSection") {
+    await loadAnalytics(true, false, null);
+  }
+
+  if (previousSectionId === "linksSection") {
+    await getLinksFromAPI();
+  }
+
+  if (previousSectionId === "settingsSection") {
+    await loadSettings();
+  }
 }
 
 document
   .getElementById("backToOverallAnalyticsBtn")
-  ?.addEventListener("click", backToLinksSection);
+  ?.addEventListener("click", backToPreviousSectionFromAnalytics);
 
   function setAnalyticsHeaderMode(mode, link = null) {
   const backBtn =
@@ -4672,22 +4693,38 @@ async function loadSettings() {
 }
 
 async function saveAccountSettings() {
+  const fullNameElement =
+    document.getElementById("settingsFullName");
+
+  const usernameElement =
+    document.getElementById("settingsUsername");
+
   const fullname =
-    document.getElementById("settingsFullName").value.trim();
+    fullNameElement.value.trim();
 
   const username =
-    document.getElementById("settingsUsername").value.trim();
+    usernameElement.value.trim();
+
+  const oldFullname =
+    fullNameElement.dataset.previous ||
+    fullname;
+
+  const oldUsername =
+    usernameElement.dataset.previous ||
+    username;
 
   if (!fullname || !username) {
     showToast(
-      "Missing fields",
-      "Full name and username are required.",
+      "Missing required fields",
+      "Please enter both full name and username.",
       "warning"
     );
     return;
   }
 
   try {
+    setSectionSyncing("settingsSection", true);
+
     const response =
       await fetch("/api/settings/account", {
         method: "PATCH",
@@ -4707,68 +4744,125 @@ async function saveAccountSettings() {
     if (!response.ok) {
       showToast(
         "Update failed",
-        data.message || "Please try again.",
+        data.message ||
+          "We couldn't update your account details. Please try again.",
         "error"
       );
       return;
     }
 
+    const changes = [];
+
+    if (oldFullname !== fullname) {
+      changes.push("Full name updated");
+    }
+
+    if (oldUsername !== username) {
+      changes.push("Username updated");
+    }
+
     showToast(
       "Account updated",
-      "Your profile has been saved.",
+      changes.length
+        ? changes.join(" • ")
+        : "Your account details are already up to date.",
       "success"
     );
 
-  } catch (error) {
+    fullNameElement.dataset.previous =
+      fullname;
+
+    usernameElement.dataset.previous =
+      username;
+
+  } catch {
     showToast(
-      "Something went wrong",
-      "Please try again.",
+      "Unable to update account",
+      "Please check your connection and try again.",
       "error"
     );
+
+  } finally {
+    setSectionSyncing("settingsSection", false);
   }
 }
-
 async function updatePassword() {
   const currentPassword =
-    document.getElementById("currentPassword").value;
+    document.getElementById(
+      "currentPassword"
+    ).value;
 
   const newPassword =
-    document.getElementById("newPassword").value;
+    document.getElementById(
+      "newPassword"
+    ).value;
 
   const confirmNewPassword =
-    document.getElementById("confirmNewPassword").value;
+    document.getElementById(
+      "confirmNewPassword"
+    ).value;
 
-  if (!currentPassword || !newPassword || !confirmNewPassword) {
+  if (
+    !currentPassword ||
+    !newPassword ||
+    !confirmNewPassword
+  ) {
     showToast(
       "Missing password fields",
-      "Please fill all password fields.",
+      "Please complete all password fields.",
       "warning"
     );
     return;
   }
 
-  if (newPassword !== confirmNewPassword) {
+  if (
+    newPassword !==
+    confirmNewPassword
+  ) {
     showToast(
       "Password mismatch",
-      "New password and confirm password do not match.",
+      "New password and confirmation password do not match.",
+      "warning"
+    );
+    return;
+  }
+
+  // prevent same password
+  if (
+    currentPassword ===
+    newPassword
+  ) {
+    showToast(
+      "Choose a new password",
+      "Your new password must be different from the current password.",
       "warning"
     );
     return;
   }
 
   try {
+    setSectionSyncing(
+      "settingsSection",
+      true
+    );
+
     const response =
-      await fetch("/api/settings/password", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          currentPassword,
-          newPassword
-        })
-      });
+      await fetch(
+        "/api/settings/password",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+          credentials:
+            "include",
+          body: JSON.stringify({
+            currentPassword,
+            newPassword
+          })
+        }
+      );
 
     const data =
       await response.json();
@@ -4776,43 +4870,75 @@ async function updatePassword() {
     if (!response.ok) {
       showToast(
         "Password update failed",
-        data.message || "Please try again.",
+        data.message ||
+          "We couldn't update your password. Please try again.",
         "error"
       );
       return;
     }
 
-    ["currentPassword", "newPassword", "confirmNewPassword"]
-      .forEach(id => {
-        document.getElementById(id).value = "";
-      });
+    [
+      "currentPassword",
+      "newPassword",
+      "confirmNewPassword"
+    ].forEach(id => {
+      document.getElementById(
+        id
+      ).value = "";
+    });
 
     showToast(
       "Password updated",
-      "Your password has been changed.",
+      "Your password has been changed successfully.",
       "success"
     );
 
   } catch {
     showToast(
-      "Something went wrong",
-      "Please try again.",
+      "Unable to update password",
+      "Please check your connection and try again.",
       "error"
+    );
+
+  } finally {
+    setSectionSyncing(
+      "settingsSection",
+      false
     );
   }
 }
-
 async function savePreferences() {
+  const expiryElement =
+    document.getElementById("defaultExpiry");
+
+  const liveElement =
+    document.getElementById("liveNotifications");
+
+  const refreshElement =
+    document.getElementById("analyticsAutoRefresh");
+
   const defaultExpiry =
-    document.getElementById("defaultExpiry").value;
+    expiryElement.value;
 
   const liveNotifications =
-    document.getElementById("liveNotifications").checked;
+    liveElement.checked;
 
   const analyticsAutoRefresh =
-    document.getElementById("analyticsAutoRefresh").checked;
+    refreshElement.checked;
+
+  const oldExpiry =
+    expiryElement.dataset.previous ||
+    defaultExpiry;
+
+  const oldLive =
+    liveElement.dataset.previous === "true";
+
+  const oldRefresh =
+    refreshElement.dataset.previous === "true";
 
   try {
+    setSectionSyncing("settingsSection", true);
+
     const response =
       await fetch("/api/settings/preferences", {
         method: "PATCH",
@@ -4832,40 +4958,90 @@ async function savePreferences() {
 
     if (!response.ok) {
       showToast(
-        "Preferences not saved",
-        data.message || "Please try again.",
+        "Update failed",
+        data.message ||
+          "We couldn't update your preferences. Please try again.",
         "error"
       );
       return;
     }
 
+    const changes = [];
+
+    if (oldExpiry !== defaultExpiry) {
+      const formattedExpiry =
+        defaultExpiry === "never"
+          ? "never expires"
+          : defaultExpiry.replace(
+              /(\d+)([a-zA-Z]+)/,
+              "$1 $2"
+            );
+
+      changes.push(
+        `Default expiry set to ${formattedExpiry}`
+      );
+    }
+
+    if (oldLive !== liveNotifications) {
+      changes.push(
+        `Live notifications ${
+          liveNotifications
+            ? "enabled"
+            : "disabled"
+        }`
+      );
+    }
+
+    if (oldRefresh !== analyticsAutoRefresh) {
+      changes.push(
+        `Auto refresh ${
+          analyticsAutoRefresh
+            ? "enabled"
+            : "disabled"
+        }`
+      );
+    }
+
     showToast(
-      "Preferences saved",
-      "Your default settings have been updated.",
+      "Preferences updated",
+      changes.length
+        ? changes.join(" • ")
+        : "Your settings are already up to date.",
       "success"
     );
 
+    expiryElement.dataset.previous =
+      defaultExpiry;
+
+    liveElement.dataset.previous =
+      liveNotifications;
+
+    refreshElement.dataset.previous =
+      analyticsAutoRefresh;
+
     liveNotificationsEnabled =
-  liveNotifications;
+      liveNotifications;
 
-analyticsAutoRefreshEnabled =
-  analyticsAutoRefresh;
+    analyticsAutoRefreshEnabled =
+      analyticsAutoRefresh;
 
-if (analyticsAutoRefreshEnabled) {
-  startAnalyticsAutoRefresh();
-} else {
-  stopAnalyticsAutoRefresh();
-}
+    if (analyticsAutoRefreshEnabled) {
+      startAnalyticsAutoRefresh();
+    } else {
+      stopAnalyticsAutoRefresh();
+    }
 
   } catch {
     showToast(
-      "Something went wrong",
-      "Please try again.",
+      "Unable to update settings",
+      "Please check your connection and try again.",
       "error"
     );
+
+  } finally {
+    setSectionSyncing("settingsSection", false);
   }
 }
-
 document
   .getElementById("saveAccountSettingsBtn")
   ?.addEventListener("click", saveAccountSettings);

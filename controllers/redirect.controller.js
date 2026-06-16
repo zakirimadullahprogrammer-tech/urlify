@@ -16,20 +16,33 @@ async function redirectToOriginalUrl(req, res) {
 
   try {
     const { shortCode } = req.params;
-
     let url = null;
 
-    // 1. Try Redis first
-    const cached = await redisClient.get(getCacheKey(shortCode));
+    try {
+      const cached = await redisClient.get(
+        getCacheKey(shortCode)
+      );
 
-    if (cached) {
-      url =
-        typeof cached === "string"
-          ? JSON.parse(cached)
-          : cached;
+      if (cached) {
+        try {
+          url =
+            typeof cached === "string"
+              ? JSON.parse(cached)
+              : cached;
+        } catch (parseError) {
+          console.error(
+            "Redis Parse Error:",
+            parseError
+          );
+        }
+      }
+    } catch (redisError) {
+      console.error(
+        "Redis Connection Error:",
+        redisError
+      );
     }
 
-    // 2. DB fallback only if cache miss
     if (!url) {
       const result = await pool.query(
         `
@@ -57,52 +70,69 @@ async function redirectToOriginalUrl(req, res) {
       });
     }
 
-    // 3. Validate before redirect
     if (!url.is_active) {
-      return res.status(410).send("This link is inactive");
+      return res
+        .status(410)
+        .send("This link is inactive");
     }
 
-    if (url.expires_at && new Date(url.expires_at) < new Date()) {
-      return res.status(410).send("This link has expired");
+    if (
+      url.expires_at &&
+      new Date(url.expires_at) < new Date()
+    ) {
+      return res
+        .status(410)
+        .send("This link has expired");
     }
 
-    const redirectTimeMs = Math.round(performance.now() - startTime);
-
-    // 4. REDIRECT IMMEDIATELY
-    res.redirect(302, url.original_url);
-
-    // 5. Do everything else after redirect
-    setImmediate(async () => {
-  try {
-    await recordClick(
-      url,
-      req,
-      redirectTimeMs,
-      clickedAt
+    const redirectTimeMs = Math.round(
+      performance.now() - startTime
     );
 
-    const io = req.app.get("io");
+    res.redirect(302, url.original_url);
 
-    if (io) {
-      io.to(`user:${url.user_id}`).emit("liveClick", {
-        urlId: url.id,
-        shortCode: url.short_code || shortCode,
-        originalUrl: url.original_url,
-        clickedAt,
-        redirectTimeMs
-      });
-    }
+    setImmediate(async () => {
+      try {
+        await recordClick(
+          url,
+          req,
+          redirectTimeMs,
+          clickedAt
+        );
 
+        const io = req.app.get("io");
+
+        if (io) {
+          io.to(`user:${url.user_id}`).emit(
+            "liveClick",
+            {
+              urlId: url.id,
+              shortCode:
+                url.short_code || shortCode,
+              originalUrl:
+                url.original_url,
+              clickedAt,
+              redirectTimeMs
+            }
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Analytics Error:",
+          error
+        );
+      }
+    });
   } catch (error) {
-    console.error("Analytics Error:", error);
-  }
-});
-
-  } catch (error) {
-    console.error("Redirect Error:", error);
+    console.error(
+      "Redirect Error:",
+      error
+    );
 
     if (!res.headersSent) {
-      return res.status(500).send("Internal Server Error");
+      return res
+        .status(500)
+        .send("Internal Server Error");
     }
   }
 }
