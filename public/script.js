@@ -48,11 +48,11 @@ window.currentAnalyticsLinkId = null;
 function lockSectionSwitching() {
   activeSectionLoading = true;
 
-  document.querySelectorAll(".nav_box[data-section]").forEach(nav => {
-  nav.addEventListener("click", () => {
-    switchDashboardSection(nav.dataset.section);
-  });
-});
+  document
+    .querySelectorAll(".nav_box[data-section]")
+    .forEach(nav => {
+      nav.classList.add("nav-disabled");
+    });
 }
 
 function unlockSectionSwitching() {
@@ -2950,42 +2950,51 @@ function showClickChartError(message = "No click analytics available") {
   canvas.style.opacity = "1";
 }
 document.addEventListener("DOMContentLoaded", () => {
-  const analyticsRange =
-    document.getElementById("analyticsRange");
+  document
+    .querySelectorAll(".nav_box[data-section]")
+    .forEach(nav => {
+      nav.addEventListener("click", async (event) => {
+        event.preventDefault();
 
-  if (analyticsRange) {
-  analyticsRange.addEventListener("change", async () => {
-  if (isChartRangeUpdating) return;
+        if (activeSectionLoading) return;
 
-  isChartRangeUpdating = true;
-  analyticsRange.disabled = true;
+        const targetSectionId = nav.dataset.section;
 
-  const requestId = ++chartRangeRequestId;
+        if (!targetSectionId || targetSectionId === currentSectionId) {
+          return;
+        }
 
-  showClickChartSkeleton();
+        pushHistory(currentSectionId);
 
-  try {
-    await loadAnalytics(false, true, requestId);
+        currentSectionId = targetSectionId;
 
-    await new Promise(resolve =>
-      requestAnimationFrame(() =>
-        requestAnimationFrame(resolve)
-      )
-    );
+        showSection(targetSectionId);
+        updateBackButtons();
 
-  } finally {
-    if (requestId === chartRangeRequestId) {
-      hideClickChartSkeleton();
-      analyticsRange.disabled = false;
-      isChartRangeUpdating = false;
-    }
-  }
+        try {
+          lockSectionSwitching();
+
+          if (targetSectionId === "analyticsSection") {
+            window.currentAnalyticsMode = "overall";
+            window.currentAnalyticsLinkId = null;
+
+            await loadAnalytics(true, false, null);
+          }
+
+          if (targetSectionId === "linksSection") {
+            await getLinksFromAPI();
+          }
+
+          if (targetSectionId === "settingsSection") {
+            await loadSettings();
+          }
+
+        } finally {
+          unlockSectionSwitching();
+        }
+      });
+    });
 });
-}
-
-  /* keep your navBoxes code below this */
-});
-
 loadAnalytics(true, false, null, false);
 loadSettings();
   
@@ -3612,43 +3621,45 @@ function renderWorldMapWhenVisible(topRegions, totalClicks) {
 }
 
 async function openLinkAnalytics(event, linkId) {
+  event.preventDefault();
   event.stopPropagation();
 
   if (analyticsLoading) return;
 
-  const selectedLink = allLinks.find(link => link.id == linkId);
+  const selectedLink =
+    allLinks.find(link => link.id == linkId);
 
   window.currentAnalyticsMode = "single";
   window.currentAnalyticsLinkId = linkId;
+  updateGlobalBackButton();
+
+  showSection("analyticsSection");
+  currentSectionId = "analyticsSection";
 
   setAnalyticsHeaderMode(
     "single",
     selectedLink
-      ? { shortCode: selectedLink.shortLink.split("/").pop() }
+      ? {
+          shortCode:
+            getShortCodeFromUrl(selectedLink.shortLink)
+        }
       : null
   );
 
-  document.querySelectorAll(".page_section").forEach(section => {
-    section.classList.remove("active_section");
-  });
-
-  document.querySelectorAll(".nav_box").forEach(nav => {
-    nav.classList.remove("active");
-  });
-
-  document.getElementById("analyticsSection")?.classList.add("active_section");
-  document.querySelector('[data-section="analyticsSection"]')?.classList.add("active");
+  updateGlobalBackButton();
 
   analyticsLoading = true;
 
-try {
-  await loadAnalytics(true, false, null);
-} finally {
-  analyticsLoading = false;
+  try {
+    await loadAnalytics(true, false, null);
+  } finally {
+    analyticsLoading = false;
+    updateGlobalBackButton();
+    
+  }
 }
 
-  
-}
+window.openLinkAnalytics = openLinkAnalytics;
 
 window.openLinkAnalytics = openLinkAnalytics;
 
@@ -3803,44 +3814,149 @@ function updateAnalyticsModeUI(data) {
   }
 }
 
-async function backToPreviousSectionFromAnalytics() {
-  window.currentAnalyticsMode = "overall";
-  window.currentAnalyticsLinkId = null;
+async function backToOverallAnalytics(event) {
+  event?.preventDefault();
+  event?.stopPropagation();
 
-  setAnalyticsHeaderMode("overall");
+  if (analyticsLoading) return;
 
-  const previousSectionId = historyTop?.sectionId || "linksSection";
+  analyticsLoading = true;
 
-  if (historyTop) {
-    historyTop = historyTop.prev;
-  }
+  try {
+    window.currentAnalyticsMode = "overall";
+    window.currentAnalyticsLinkId = null;
 
-  showSection(previousSectionId);
+    setAnalyticsHeaderMode("overall");
 
-  currentSectionId = previousSectionId;
-  updateBackButtons();
+    updateBackButtonVisibility();
 
-  if (previousSectionId === "analyticsSection") {
     await loadAnalytics(true, false, null);
-  }
 
-  if (previousSectionId === "linksSection") {
-    await getLinksFromAPI();
-  }
-
-  if (previousSectionId === "settingsSection") {
-    await loadSettings();
+  } finally {
+    analyticsLoading = false;
+    updateBackButtonVisibility();
   }
 }
 
 document
   .getElementById("backToOverallAnalyticsBtn")
-  ?.addEventListener("click", backToPreviousSectionFromAnalytics);
+  ?.addEventListener("click", async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
 
-  function setAnalyticsHeaderMode(mode, link = null) {
-  const backBtn =
-    document.getElementById("backToOverallAnalyticsBtn");
+    await backToOverallAnalytics();
+  });
+async function handleGlobalBack(event) {
+  event?.preventDefault();
+  event?.stopPropagation();
 
+  if (activeSectionLoading || analyticsLoading) return;
+
+  const analyticsSection = document.getElementById("analyticsSection");
+
+  const isAnalyticsVisible =
+    analyticsSection?.classList.contains("active_section");
+
+  const isSingleAnalytics =
+    isAnalyticsVisible &&
+    window.currentAnalyticsMode === "single";
+
+  if (isSingleAnalytics) {
+    analyticsLoading = true;
+
+    try {
+      window.currentAnalyticsMode = "overall";
+      window.currentAnalyticsLinkId = null;
+
+      setAnalyticsHeaderMode("overall");
+
+      await loadAnalytics(true, false, null);
+
+    } finally {
+      analyticsLoading = false;
+      updateGlobalBackButton();
+    }
+
+    return;
+  }
+
+  if (!historyTop) return;
+
+  const previousSectionId = historyTop.sectionId;
+  historyTop = historyTop.prev;
+
+  currentSectionId = previousSectionId;
+
+  showSection(previousSectionId);
+  updateGlobalBackButton();
+
+  try {
+    activeSectionLoading = true;
+
+    if (previousSectionId === "analyticsSection") {
+      window.currentAnalyticsMode = "overall";
+      window.currentAnalyticsLinkId = null;
+
+      await loadAnalytics(true, false, null);
+    }
+
+    if (previousSectionId === "linksSection") {
+      await getLinksFromAPI();
+    }
+
+    if (previousSectionId === "settingsSection") {
+      await loadSettings();
+    }
+
+  } finally {
+    activeSectionLoading = false;
+    updateGlobalBackButton();
+  }
+}
+
+document
+  .getElementById("globalBackBtn")
+  ?.addEventListener("click", handleGlobalBack);
+function updateGlobalBackButton() {
+  const analyticsSection = document.getElementById("analyticsSection");
+
+  const isAnalyticsVisible =
+    analyticsSection?.classList.contains("active_section");
+
+  const isSingleAnalytics =
+    isAnalyticsVisible &&
+    window.currentAnalyticsMode === "single";
+
+  const shouldShowBack =
+    isSingleAnalytics || Boolean(historyTop);
+
+  document.querySelectorAll(".global-back-btn").forEach(btn => {
+    const parentSection = btn.closest(".page_section");
+
+    const isInsideActiveSection =
+      parentSection?.classList.contains("active_section");
+
+    if (!shouldShowBack || !isInsideActiveSection) {
+      btn.style.display = "none";
+      return;
+    }
+
+    btn.style.display = "flex";
+
+    const text = btn.querySelector(".globalBackText");
+
+    if (text) {
+      text.textContent = isSingleAnalytics
+        ? "Back"
+        : "Back";
+    }
+  });
+}
+document
+  .getElementById("globalBackBtn")
+  ?.addEventListener("click", handleGlobalBack);
+
+function setAnalyticsHeaderMode(mode, link = null) {
   const lastUpdated =
     document.getElementById("analyticsLastUpdated");
 
@@ -3848,12 +3964,6 @@ document
     document.getElementById("analyticsModeLabel");
 
   if (mode === "single") {
-    if (backBtn) {
-      backBtn.hidden = false;
-    }
-
-    showAnalyticsSkeletons();
-
     if (lastUpdated) {
       lastUpdated.textContent = "Loading link analytics...";
     }
@@ -3864,11 +3974,8 @@ document
         : "Viewing single link analytics";
     }
 
+    updateGlobalBackButton();
     return;
-  }
-
-  if (backBtn) {
-    backBtn.hidden = true;
   }
 
   if (modeLabel) {
@@ -3878,6 +3985,8 @@ document
   if (lastUpdated) {
     lastUpdated.textContent = "Syncing...";
   }
+
+  updateGlobalBackButton();
 }
 function updateAnalyticsLastUpdated() {
   const lastUpdated =
@@ -5397,6 +5506,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     );
   });
+  
+});
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".global-back-btn").forEach(btn => {
+    btn.addEventListener("click", handleGlobalBack);
+  });
+
+  updateGlobalBackButton();
 });
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -5443,76 +5560,7 @@ function setSyncButtonState(button, isSyncing) {
   button.disabled = isSyncing;
   button.classList.toggle("syncing", isSyncing);
 }
-document
-  .querySelectorAll(".nav_box[data-section]")
-  .forEach(nav => {
 
-    nav.addEventListener("click", async () => {
-      if (activeSectionLoading) return;
-
-      const targetSection =
-        nav.dataset.section;
-
-      const section =
-        document.getElementById(
-          targetSection
-        );
-
-      const isAlreadyActive =
-        section?.classList.contains(
-          "active_section"
-        );
-
-      if (isAlreadyActive) return;
-
-      // remove active
-      document
-        .querySelectorAll(".section")
-        .forEach(section => {
-          section.classList.remove(
-            "active_section"
-          );
-        });
-
-      // activate target
-      section?.classList.add(
-        "active_section"
-      );
-
-      // SYNC TARGET SECTION
-      try {
-        lockSectionSwitching();
-
-        if (
-          targetSection ===
-          "analyticsSection"
-        ) {
-          await loadAnalytics(
-            true,
-            false,
-            null
-          );
-        }
-
-        else if (
-          targetSection ===
-          "linksSection"
-        ) {
-          await getLinksFromAPI();
-        }
-
-        else if (
-          targetSection ===
-          "settingsSection"
-        ) {
-          await loadSettings();
-        }
-
-      } finally {
-        unlockSectionSwitching();
-      }
-    });
-  });
   document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("mobileMenuBtn");
   const sidebar = document.querySelector(".ds1");
@@ -5593,11 +5641,38 @@ class HistoryNode {
 
 let currentSectionId = "analyticsSection";
 let historyTop = null;
+function updateBackButtonVisibility() {
+  const isSingleAnalytics =
+    window.currentAnalyticsMode === "single";
 
-function updateBackButtons() {
-  document.querySelectorAll(".section-back-btn").forEach(btn => {
-    btn.style.display = historyTop ? "flex" : "none";
+  const analyticsSection =
+    document.getElementById("analyticsSection");
+
+  const isAnalyticsVisible =
+    analyticsSection?.classList.contains("active_section");
+
+  const singleAnalyticsBackBtn =
+    document.getElementById("backToOverallAnalyticsBtn");
+
+  const commonBackBtns =
+    document.querySelectorAll(".section-back-btn");
+
+  // Single analytics back button
+  if (singleAnalyticsBackBtn) {
+    singleAnalyticsBackBtn.hidden = !isSingleAnalytics;
+  }
+
+  // Common section back buttons
+  commonBackBtns.forEach(btn => {
+    if (isSingleAnalytics && isAnalyticsVisible) {
+      btn.style.display = "none";
+    } else {
+      btn.style.display = historyTop ? "flex" : "none";
+    }
   });
+}
+function updateBackButtons() {
+  updateGlobalBackButton();
 }
 
 function pushHistory(sectionId) {
@@ -5620,19 +5695,38 @@ function switchSection(newSectionId) {
   updateBackButtons();
 }
 
-function goBackSection() {
-  if (!historyTop) return;
+async function goBackSection() {
+  if (!historyTop || activeSectionLoading) return;
 
   const previousSectionId = historyTop.sectionId;
-
   historyTop = historyTop.prev;
-
-  showSection(previousSectionId);
 
   currentSectionId = previousSectionId;
 
+  showSection(previousSectionId);
   updateBackButtons();
+
+  try {
+    activeSectionLoading = true;
+
+    if (previousSectionId === "analyticsSection") {
+      await loadAnalytics(true, false, null);
+    }
+
+    if (previousSectionId === "linksSection") {
+      await getLinksFromAPI();
+    }
+
+    if (previousSectionId === "settingsSection") {
+      await loadSettings();
+    }
+
+  } finally {
+    activeSectionLoading = false;
+  }
 }
+
+window.goBackSection = goBackSection;
 
 function showSection(sectionId) {
   document.querySelectorAll(".page_section").forEach(section => {
