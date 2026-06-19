@@ -1,5 +1,7 @@
 const { pool } = require("../config/db");
 const redisClient = require("../config/redis");
+const path = require("path");
+const fs = require("fs");
 
 const {
   getCacheKey,
@@ -10,12 +12,58 @@ const {
   recordClick
 } = require("../services/clickTracking.service");
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function renderStatusPage(fileName, shortCode) {
+  const filePath = path.join(
+    process.cwd(),
+    "public",
+    "pages",
+    fileName
+  );
+
+  let html = fs.readFileSync(filePath, "utf8");
+
+  const safeShortCode = escapeHtml(shortCode);
+
+  html = html.replace(
+    "</body>",
+    `
+      <script>
+        const requestedLinkBox = document.getElementById("requestedLinkBox");
+        const requestedShortCode = document.getElementById("requestedShortCode");
+
+        if (requestedLinkBox && requestedShortCode) {
+          requestedShortCode.textContent = "/${safeShortCode}";
+          requestedLinkBox.style.display = "flex";
+        }
+      </script>
+    </body>`
+  );
+
+  return html;
+}
+
 async function redirectToOriginalUrl(req, res) {
   const startTime = performance.now();
   const clickedAt = new Date();
 
   try {
     const { shortCode } = req.params;
+
+    if (!shortCode) {
+      return res
+        .status(404)
+        .send(renderStatusPage("link-not-found.html", ""));
+    }
+
     let url = null;
 
     try {
@@ -60,7 +108,14 @@ async function redirectToOriginalUrl(req, res) {
       );
 
       if (result.rows.length === 0) {
-        return res.status(404).send("Link not found");
+        return res
+          .status(404)
+          .send(
+            renderStatusPage(
+              "link-not-found.html",
+              shortCode
+            )
+          );
       }
 
       url = result.rows[0];
@@ -73,7 +128,12 @@ async function redirectToOriginalUrl(req, res) {
     if (!url.is_active) {
       return res
         .status(410)
-        .send("This link is inactive");
+        .send(
+          renderStatusPage(
+            "link-inactive.html",
+            shortCode
+          )
+        );
     }
 
     if (
@@ -82,7 +142,12 @@ async function redirectToOriginalUrl(req, res) {
     ) {
       return res
         .status(410)
-        .send("This link has expired");
+        .send(
+          renderStatusPage(
+            "link-expired.html",
+            shortCode
+          )
+        );
     }
 
     const redirectTimeMs = Math.round(
@@ -123,6 +188,7 @@ async function redirectToOriginalUrl(req, res) {
         );
       }
     });
+
   } catch (error) {
     console.error(
       "Redirect Error:",

@@ -186,7 +186,7 @@ if (document.querySelector("#clickChart")) {
       borderColor: "#e5e7eb",
       borderWidth: 1,
       padding: 12,
-      cornerRadius: 12,
+      cornerRadius: 5,
       displayColors: false,
 
       callbacks: {
@@ -2684,6 +2684,23 @@ updateAnalyticsModeUI(data);
         "No OS analytics yet",
         "visits"
       );
+
+      renderAnalyticsBars(
+  document.getElementById("browserAnalyticsContainer"),
+  data?.browsers,
+  "browser",
+  "No browser analytics yet",
+  "visits"
+);
+
+renderAnalyticsBars(
+  document.getElementById("osAnalyticsContainer"),
+  data?.operatingSystems,
+  "operatingSystem",
+  "No OS analytics yet",
+  "visits"
+);
+renderDeviceBreakdown(data?.devices || data?.deviceBreakdown || []);
 
       renderTopLinks(data, totalClicks);
 
@@ -5812,4 +5829,156 @@ async function apiFetch(
   }
 
   return response;
+}
+function renderDeviceBreakdown(devices = []) {
+  const canvas = document.getElementById("deviceChart");
+  const legend = document.getElementById("deviceLegend");
+
+  if (!canvas || typeof Chart === "undefined") return;
+
+  if (window.deviceChartInstance) {
+    window.deviceChartInstance.destroy();
+    window.deviceChartInstance = null;
+  }
+
+  const validDevices = Array.isArray(devices)
+    ? devices.filter(item => Number(item.clicks || item.visits || 0) > 0)
+    : [];
+
+  if (!validDevices.length) {
+    if (legend) {
+      legend.innerHTML = `
+        <div class="empty-analytics">
+          No device data yet
+        </div>
+      `;
+    }
+
+    window.deviceChartInstance = new Chart(canvas, {
+      type: "doughnut",
+      data: {
+        labels: ["No data"],
+        datasets: [
+          {
+            data: [1],
+            backgroundColor: ["#e5e7eb"],
+            borderWidth: 0
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "72%",
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            enabled: false
+          }
+        }
+      }
+    });
+
+    return;
+  }
+
+  const labels = validDevices.map(item =>
+    item.device || item.deviceType || "Unknown"
+  );
+
+  const values = validDevices.map(item =>
+    Number(item.clicks || item.visits || 0)
+  );
+
+  const total = values.reduce((sum, value) => sum + value, 0);
+
+  const colors = [
+    "#2563eb",
+    "#10b981",
+    "#f59e0b",
+    "#ef4444",
+    "#8b5cf6"
+  ];
+
+  window.deviceChartInstance = new Chart(canvas, {
+    type: "doughnut",
+    data: {
+      labels,
+      datasets: [
+        {
+          data: values,
+          backgroundColor: colors,
+          borderColor: "#ffffff",
+          borderWidth: 3,
+          hoverOffset: 6
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: "72%",
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: "#ffffff",
+          titleColor: "#111827",
+          bodyColor: "#374151",
+          borderColor: "#e5e7eb",
+          borderWidth: 1,
+          padding: 12,
+          cornerRadius: 12,
+          displayColors: true,
+          callbacks: {
+            label(context) {
+              const value = context.parsed;
+              const percentage = total
+                ? ((value / total) * 100).toFixed(1)
+                : 0;
+
+              return `${context.label}: ${value} visits • ${percentage}%`;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  if (legend) {
+    legend.innerHTML = validDevices
+      .map((item, index) => {
+        const label =
+          item.device || item.deviceType || "Unknown";
+
+        const value =
+          Number(item.clicks || item.visits || 0);
+
+        const percentage =
+          total ? ((value / total) * 100).toFixed(1) : 0;
+
+        return `
+          <div class="device-legend-item">
+            <div class="device-legend-left">
+              <span
+                class="device-dot"
+                style="background:${colors[index % colors.length]}"
+              ></span>
+
+              <span class="inter-regular">
+                ${label}
+              </span>
+            </div>
+
+            <strong class="inter-bold">
+              ${percentage}%
+            </strong>
+          </div>
+        `;
+      })
+      .join("");
+  }
 }
