@@ -1,0 +1,737 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sofia&display=swap" rel="stylesheet">
+
+  <title>Terms & Conditions | URLify</title>
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --ink: #111110;
+      --ink-2: #3a3a38;
+      --ink-3: #7a7a76;
+      --bg: #F7F6F3;
+      --surface: #ffffff;
+      --border: rgba(0, 0, 0, 0.10);
+      --blue: #2563EB;
+      --blue-light: #EFF4FF;
+      --blue-mid: #BFCFFD;
+      --green: #047857;
+      --green-light: #ECFDF5;
+      --green-border: #A7F3D0;
+      --red: #B91C1C;
+      --red-light: #FEF3F2;
+      --red-border: #FCA5A5;
+      --radius: 10px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    a {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* NAV */
+    .top-nav {
+      width: 100%;
+      min-height: 73px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Sofia', cursive;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .logo span {
+      color: var(--blue);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .btn-ghost,
+    .btn-primary {
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: background 0.15s, transform 0.15s;
+    }
+
+    .btn-ghost {
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg);
+    }
+
+    .btn-primary {
+      padding: 0 18px;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: #222220;
+      transform: translateY(-1px);
+    }
+
+    /* PAGE */
+    .terms-page {
+      width: 100%;
+      min-height: calc(100vh - 73px);
+      padding: 54px 40px;
+    }
+
+    .terms-shell {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: fit-content;
+      margin-bottom: 22px;
+      padding: 5px 12px;
+      border: 1px solid var(--blue-mid);
+      border-radius: 20px;
+      background: var(--blue-light);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--blue);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .terms-hero {
+      margin-bottom: 32px;
+    }
+
+    .terms-hero h1 {
+      max-width: 760px;
+      margin-bottom: 14px;
+      color: var(--ink);
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+    }
+
+    .terms-hero h1 em {
+      font-style: normal;
+      color: var(--blue);
+    }
+
+    .terms-hero p {
+      max-width: 760px;
+      color: var(--ink-3);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .terms-layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* SIDEBAR */
+    .terms-sidebar {
+      position: sticky;
+      top: 96px;
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .terms-sidebar h3 {
+      margin-bottom: 12px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .terms-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .terms-nav a {
+      display: flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: var(--ink-3);
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .terms-nav a:hover {
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    /* CARD */
+    .terms-card {
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .terms-card-header {
+      min-width: 0;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .terms-card-header span:last-child {
+      min-width: 0;
+      margin-left: 6px;
+      color: var(--ink-3);
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .terms-content {
+      padding: 30px;
+    }
+
+    .terms-section {
+      padding-bottom: 28px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+      scroll-margin-top: 100px;
+    }
+
+    .terms-section:last-child {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+
+    .terms-section h2 {
+      margin-bottom: 10px;
+      color: var(--ink);
+      font-size: 23px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.4px;
+    }
+
+    .terms-section p {
+      margin-bottom: 12px;
+      color: var(--ink-3);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .terms-section ul {
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+
+    .terms-section li {
+      margin-bottom: 9px;
+      color: var(--ink-3);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .terms-section strong {
+      color: var(--ink-2);
+      font-weight: 700;
+    }
+
+    .notice-box,
+    .danger-box {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .notice-box {
+      background: var(--blue-light);
+      border: 1px solid var(--blue-mid);
+      color: var(--ink-2);
+    }
+
+    .danger-box {
+      background: var(--red-light);
+      border: 1px solid var(--red-border);
+      color: #991B1B;
+    }
+
+    .terms-footer {
+      margin-top: 26px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .terms-footer p {
+      color: var(--ink-3);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .terms-footer strong {
+      color: var(--ink);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .terms-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .terms-sidebar {
+        position: static;
+      }
+
+      .terms-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .terms-nav a {
+        background: var(--bg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-nav {
+        min-height: 65px;
+        padding: 16px 20px;
+      }
+
+      .terms-page {
+        min-height: calc(100vh - 65px);
+        padding: 40px 20px;
+      }
+
+      .terms-hero {
+        margin-bottom: 26px;
+      }
+
+      .terms-hero h1 {
+        letter-spacing: -1px;
+      }
+
+      .terms-content {
+        padding: 24px 20px;
+      }
+
+      .terms-section {
+        scroll-margin-top: 82px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .top-nav {
+        padding: 15px 16px;
+      }
+
+      .logo {
+        font-size: 20px;
+      }
+
+      .nav-actions {
+        gap: 8px;
+      }
+
+      .btn-ghost,
+      .btn-primary {
+        height: 36px;
+        padding: 0 12px;
+        font-size: 13px;
+      }
+
+      .terms-page {
+        padding: 34px 16px;
+      }
+
+      .badge {
+        margin-bottom: 18px;
+        padding: 4px 10px;
+        font-size: 10px;
+      }
+
+      .terms-hero p {
+        font-size: 14px;
+      }
+
+      .terms-sidebar {
+        padding: 14px;
+      }
+
+      .terms-nav {
+        grid-template-columns: 1fr;
+      }
+
+      .terms-card-header {
+        padding: 14px 16px;
+      }
+
+      .terms-content {
+        padding: 22px 16px;
+      }
+
+      .terms-section {
+        padding-bottom: 24px;
+        margin-bottom: 24px;
+      }
+
+      .terms-section h2 {
+        font-size: 20px;
+      }
+
+      .terms-section p,
+      .terms-section li {
+        font-size: 13.5px;
+      }
+
+      .terms-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .terms-footer .btn-primary {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .nav-actions {
+        display: none;
+      }
+
+      .top-nav {
+        justify-content: center;
+      }
+
+      .terms-page {
+        padding: 30px 14px;
+      }
+
+      .terms-content {
+        padding: 20px 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="top-nav">
+    <a href="/" class="logo">url<span>.</span>ify</a>
+
+    <div class="nav-actions">
+      <button class="btn-ghost" type="button" onclick="window.location.href='/'">
+        Home
+      </button>
+
+      <button class="btn-primary" type="button" onclick="window.location.href='/pages/signup'">
+        Create account
+      </button>
+    </div>
+  </nav>
+
+  <main class="terms-page">
+    <div class="terms-shell">
+
+      <div class="badge">
+        <span class="dot"></span>
+        Legal information
+      </div>
+
+      <section class="terms-hero">
+        <h1>
+          Terms & <em>Conditions</em>
+        </h1>
+
+        <p>
+          These Terms & Conditions explain the rules for using URLify, including account usage, link creation, analytics, acceptable use, and account deletion.
+        </p>
+      </section>
+
+      <div class="terms-layout">
+
+        <aside class="terms-sidebar">
+          <h3>On this page</h3>
+
+          <div class="terms-nav">
+            <a href="#acceptance">Acceptance</a>
+            <a href="#account">Account usage</a>
+            <a href="#links">Short links</a>
+            <a href="#analytics">Analytics data</a>
+            <a href="#prohibited">Prohibited use</a>
+            <a href="#security">Security</a>
+            <a href="#deletion">Account deletion</a>
+            <a href="#liability">Liability</a>
+            <a href="#changes">Changes</a>
+          </div>
+        </aside>
+
+        <section class="terms-card">
+          <div class="terms-card-header">
+            <div class="demo-dot" style="background:#FF5F57"></div>
+            <div class="demo-dot" style="background:#FEBC2E"></div>
+            <div class="demo-dot" style="background:#28C840"></div>
+            <span>urlify · terms</span>
+          </div>
+
+          <div class="terms-content">
+
+            <section class="terms-section" id="acceptance">
+              <h2>1. Acceptance of terms</h2>
+
+              <p>
+                By creating an account or using URLify, you agree to follow these Terms & Conditions. If you do not agree with these terms, you should not use the service.
+              </p>
+
+              <div class="notice-box">
+                URLify is a link management and analytics platform built to help users create short links, track clicks, and manage link performance.
+              </div>
+            </section>
+
+            <section class="terms-section" id="account">
+              <h2>2. Account usage</h2>
+
+              <p>
+                You are responsible for keeping your account credentials secure and for all activity that happens under your account.
+              </p>
+
+              <ul>
+                <li>You must provide accurate account information.</li>
+                <li>You must not share your password with others.</li>
+                <li>You must not attempt to access another user’s account.</li>
+                <li>You are responsible for links created from your account.</li>
+              </ul>
+            </section>
+
+            <section class="terms-section" id="links">
+              <h2>3. Short links</h2>
+
+              <p>
+                URLify allows you to create, manage, edit, deactivate, and delete short links. You are responsible for the destination URLs you submit.
+              </p>
+
+              <ul>
+                <li>Short links may redirect users to the destination URL you provide.</li>
+                <li>Inactive or expired links may stop redirecting.</li>
+                <li>Deleted links and related analytics may be permanently removed.</li>
+                <li>Custom aliases must not impersonate brands, people, or services.</li>
+              </ul>
+            </section>
+
+            <section class="terms-section" id="analytics">
+              <h2>4. Analytics data</h2>
+
+              <p>
+                URLify may collect basic click analytics for links, such as click time, device type, browser, operating system, country, referrer, traffic source, and redirect timing.
+              </p>
+
+              <p>
+                Analytics are used to show dashboard insights and improve link performance visibility.
+              </p>
+            </section>
+
+            <section class="terms-section" id="prohibited">
+              <h2>5. Prohibited use</h2>
+
+              <p>
+                You must not use URLify for harmful, illegal, abusive, or misleading activities.
+              </p>
+
+              <ul>
+                <li>Do not create links to malware, phishing pages, scams, or harmful downloads.</li>
+                <li>Do not use URLify to spam, harass, deceive, or impersonate others.</li>
+                <li>Do not attempt to overload, disrupt, reverse engineer, or abuse the service.</li>
+                <li>Do not use short links to hide illegal or unsafe destinations.</li>
+              </ul>
+
+              <div class="danger-box">
+                URLify may disable, delete, or block links that appear harmful, suspicious, abusive, or against these terms.
+              </div>
+            </section>
+
+            <section class="terms-section" id="security">
+              <h2>6. Security and access</h2>
+
+              <p>
+                URLify uses authentication and account-based access controls to protect user dashboards. However, no system can be guaranteed to be completely secure.
+              </p>
+
+              <ul>
+                <li>Use a strong password.</li>
+                <li>Log out from shared devices.</li>
+                <li>Report suspicious account activity if noticed.</li>
+              </ul>
+            </section>
+
+            <section class="terms-section" id="deletion">
+              <h2>7. Account deletion</h2>
+
+              <p>
+                You may delete your account from the settings page. Account deletion may permanently remove your account, links, preferences, API keys, webhook records, usage logs, and click analytics.
+              </p>
+
+              <p>
+                Once deletion is complete, the action may not be reversible.
+              </p>
+            </section>
+
+            <section class="terms-section" id="liability">
+              <h2>8. Limitation of liability</h2>
+
+              <p>
+                URLify is provided as-is. We are not responsible for losses caused by misuse of links, incorrect destination URLs, unavailable services, analytics inaccuracies, or third-party websites reached through short links.
+              </p>
+            </section>
+
+            <section class="terms-section" id="changes">
+              <h2>9. Changes to these terms</h2>
+
+              <p>
+                These terms may be updated from time to time. Continued use of URLify after changes means you accept the updated terms.
+              </p>
+
+              <p>
+                Last updated: June 20, 2026
+              </p>
+            </section>
+
+          </div>
+        </section>
+
+      </div>
+
+      <div class="terms-footer">
+        <p>
+          By using <strong>urlify</strong>, you agree to these Terms & Conditions.
+        </p>
+
+        <button class="btn-primary" type="button" onclick="window.location.href='/pages/signup'">
+          Back to signup
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

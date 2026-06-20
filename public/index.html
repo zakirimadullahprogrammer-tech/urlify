@@ -3,10 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>URLify | Smart URL Shortener & Analytics Platform</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Sofia&display=swap" rel="stylesheet">
+
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
   :root {
     --ink: #111110;
@@ -21,6 +28,16 @@
     --radius: 10px;
   }
 
+  html,
+  body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     font-family: 'Poppins', sans-serif;
     background: var(--bg);
@@ -30,7 +47,26 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── NAV ── */
+  button,
+  a {
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  svg {
+    max-width: 100%;
+  }
+
+  /* NAV */
   nav {
     display: flex;
     align-items: center;
@@ -47,11 +83,14 @@
     font-family: 'Sofia', cursive;
     font-size: 22px;
     font-weight: 400;
-    letter-spacing: 0px;
     color: var(--ink);
     text-decoration: none;
+    white-space: nowrap;
   }
-  .logo span { color: var(--blue); }
+
+  .logo span {
+    color: var(--blue);
+  }
 
   .nav-links {
     display: flex;
@@ -67,9 +106,16 @@
     cursor: pointer;
     transition: color 0.15s;
   }
-  .nav-link:hover { color: var(--ink); }
 
-  .nav-actions { display: flex; gap: 10px; align-items: center; }
+  .nav-link:hover {
+    color: var(--ink);
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
 
   .btn-ghost {
     padding: 8px 16px;
@@ -77,13 +123,15 @@
     background: transparent;
     border-radius: var(--radius);
     font-size: 14px;
-    font-family: 'Poppins', sans-serif;
     cursor: pointer;
     color: var(--ink);
     font-weight: 500;
     transition: background 0.15s;
   }
-  .btn-ghost:hover { background: var(--bg); }
+
+  .btn-ghost:hover {
+    background: var(--bg);
+  }
 
   .btn-primary {
     padding: 8px 18px;
@@ -92,22 +140,119 @@
     border: none;
     border-radius: var(--radius);
     font-size: 14px;
-    font-family: 'Poppins', sans-serif;
     cursor: pointer;
     font-weight: 500;
     transition: background 0.15s;
   }
-  .btn-primary:hover { background: #222220; }
 
-  /* ── HERO ── */
+  .btn-primary:hover {
+    background: #222220;
+  }
+
+  /* HAMBURGER */
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+    z-index: 200;
+  }
+
+  .menu-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: all 0.25s ease;
+  }
+
+  .menu-toggle.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .menu-toggle.open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-toggle.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    position: sticky;
+    top: 65px;
+    z-index: 99;
+  }
+
+  .mobile-menu.open {
+    max-height: 340px;
+    padding: 16px 20px 20px;
+  }
+
+  .mobile-menu a {
+    font-size: 15px;
+    color: var(--ink-2);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mobile-menu a:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-menu .mobile-btns {
+    display: flex;
+    gap: 10px;
+    padding-top: 14px;
+  }
+
+  .mobile-menu .mobile-btns a {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: none;
+  }
+
+  .mobile-menu .btn-m-ghost {
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--ink);
+  }
+
+  .mobile-menu .btn-m-primary {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  /* HERO */
   .hero {
+    width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     min-height: 580px;
     border-bottom: 1px solid var(--border);
   }
 
   .hero-left {
+    min-width: 0;
     padding: 64px 40px;
     display: flex;
     flex-direction: column;
@@ -146,7 +291,6 @@
   }
 
   .hero-headline {
-    font-family: 'Poppins', sans-serif;
     font-size: 46px;
     font-weight: 700;
     line-height: 1.08;
@@ -182,7 +326,6 @@
     border: none;
     border-radius: var(--radius);
     font-size: 15px;
-    font-family: 'Poppins', sans-serif;
     font-weight: 500;
     cursor: pointer;
     transition: background 0.15s;
@@ -191,7 +334,10 @@
     gap: 6px;
     text-decoration: none;
   }
-  .btn-hero:hover { background: #1d51d4; }
+
+  .btn-hero:hover {
+    background: #1d51d4;
+  }
 
   .btn-hero-ghost {
     padding: 12px 24px;
@@ -200,7 +346,6 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     font-size: 15px;
-    font-family: 'Poppins', sans-serif;
     font-weight: 500;
     cursor: pointer;
     transition: background 0.15s;
@@ -208,7 +353,10 @@
     display: inline-flex;
     align-items: center;
   }
-  .btn-hero-ghost:hover { background: #eeeeed; }
+
+  .btn-hero-ghost:hover {
+    background: #eeeeed;
+  }
 
   .hero-proof {
     display: flex;
@@ -223,22 +371,29 @@
     letter-spacing: 0.06em;
     font-weight: 500;
   }
+
   .proof-val {
-    font-family: 'Poppins', sans-serif;
     font-size: 13px;
     font-weight: 600;
     color: var(--ink-2);
     margin-top: 2px;
   }
 
-  /* ── HERO RIGHT ── */
+  /* HERO RIGHT */
   .hero-right {
+    min-width: 0;
     padding: 40px;
     display: flex;
     flex-direction: column;
     gap: 20px;
     justify-content: center;
     background: var(--surface);
+  }
+
+  .demo-card,
+  .stats-card {
+    width: 100%;
+    min-width: 0;
   }
 
   .demo-card {
@@ -257,9 +412,26 @@
     background: var(--bg);
   }
 
-  .demo-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .demo-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
 
-  .demo-card-body { padding: 20px 18px; }
+  .demo-card-title {
+    min-width: 0;
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-left: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .demo-card-body {
+    padding: 20px 18px;
+  }
 
   .url-transform {
     display: flex;
@@ -268,6 +440,7 @@
   }
 
   .url-row {
+    min-width: 0;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -284,6 +457,7 @@
   }
 
   .url-chip {
+    min-width: 0;
     font-size: 13px;
     font-family: 'Poppins', monospace;
     padding: 8px 12px;
@@ -311,7 +485,47 @@
     gap: 8px;
   }
 
+  .url-chip.short span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .chip-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .copy-btn {
+    padding: 5px 10px;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.15s;
+  }
+
+  .copy-btn:hover {
+    background: #333331;
+  }
+
+  .qr-mini-btn {
+    background: var(--blue);
+  }
+
+  .qr-mini-btn:hover {
+    background: #1d51d4;
+  }
+
   .arrow-row {
+    min-width: 0;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -335,22 +549,7 @@
     white-space: nowrap;
   }
 
-  .copy-btn {
-    margin-left: auto;
-    padding: 5px 10px;
-    background: var(--ink);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 12px;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background 0.15s;
-  }
-  .copy-btn:hover { background: #333331; }
-
-  /* ── STATS CARD ── */
+  /* STATS CARD */
   .stats-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -371,7 +570,6 @@
     font-size: 13px;
     font-weight: 600;
     color: var(--ink);
-    font-family: 'Poppins', sans-serif;
   }
 
   .live-badge {
@@ -382,6 +580,7 @@
     border-radius: 20px;
     padding: 3px 10px;
     font-weight: 500;
+    white-space: nowrap;
   }
 
   .chart-bars {
@@ -399,26 +598,44 @@
     transition: background 0.2s;
     animation: growBar 0.8s ease-out both;
   }
-  .bar:hover { background: var(--blue); cursor: pointer; }
-  .bar.active { background: var(--blue); }
+
+  .bar:hover {
+    background: var(--blue);
+    cursor: pointer;
+  }
+
+  .bar.active {
+    background: var(--blue);
+  }
 
   @keyframes growBar {
-    from { transform: scaleY(0); transform-origin: bottom; }
-    to   { transform: scaleY(1); transform-origin: bottom; }
+    from {
+      transform: scaleY(0);
+      transform-origin: bottom;
+    }
+
+    to {
+      transform: scaleY(1);
+      transform-origin: bottom;
+    }
   }
 
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
     border-top: 1px solid var(--border);
     padding-top: 14px;
   }
 
-  .stat-cell { display: flex; flex-direction: column; gap: 2px; }
+  .stat-cell {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
 
   .stat-num {
-    font-family: 'Poppins', sans-serif;
     font-size: 18px;
     font-weight: 700;
     color: var(--ink);
@@ -432,8 +649,9 @@
     letter-spacing: 0.04em;
   }
 
-  /* ── FEATURES ── */
+  /* FEATURES */
   .features {
+    width: 100%;
     padding: 80px 40px;
     border-bottom: 1px solid var(--border);
   }
@@ -448,7 +666,6 @@
   }
 
   .section-title {
-    font-family: 'Poppins', sans-serif;
     font-size: 34px;
     font-weight: 700;
     letter-spacing: -1px;
@@ -461,14 +678,14 @@
   .section-sub {
     font-size: 15px;
     color: var(--ink-3);
-    max-width: 480px;
+    max-width: 520px;
     margin-bottom: 52px;
     line-height: 1.7;
   }
 
   .feature-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1px;
     background: var(--border);
     border: 1px solid var(--border);
@@ -477,16 +694,21 @@
   }
 
   .feature-cell {
+    min-width: 0;
     background: var(--surface);
     padding: 28px 24px;
     transition: background 0.15s;
   }
-  .feature-cell:hover { background: #fafaf9; }
+
+  .feature-cell:hover {
+    background: #fafaf9;
+  }
 
   .feature-icon {
     width: 36px;
     height: 36px;
     background: var(--blue-light);
+    border: 1px solid var(--blue-mid);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -496,7 +718,6 @@
   }
 
   .feature-title {
-    font-family: 'Poppins', sans-serif;
     font-size: 15px;
     font-weight: 600;
     margin-bottom: 8px;
@@ -509,14 +730,16 @@
     line-height: 1.65;
   }
 
-  /* ── ARCHITECTURE ── */
+  /* ARCHITECTURE */
   .architecture {
+    width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     border-bottom: 1px solid var(--border);
   }
 
   .arch-left {
+    min-width: 0;
     padding: 80px 40px;
     border-right: 1px solid var(--border);
     display: flex;
@@ -525,6 +748,7 @@
   }
 
   .arch-right {
+    min-width: 0;
     padding: 40px;
     background: var(--surface);
     display: flex;
@@ -534,6 +758,7 @@
   }
 
   .arch-card {
+    min-width: 0;
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 20px;
@@ -543,10 +768,12 @@
     align-items: flex-start;
     transition: border-color 0.15s;
   }
-  .arch-card:hover { border-color: var(--blue-mid); }
+
+  .arch-card:hover {
+    border-color: var(--blue-mid);
+  }
 
   .arch-num {
-    font-family: 'Poppins', sans-serif;
     font-size: 11px;
     font-weight: 700;
     color: var(--blue);
@@ -559,7 +786,6 @@
   }
 
   .arch-content h4 {
-    font-family: 'Poppins', sans-serif;
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 4px;
@@ -572,15 +798,16 @@
     line-height: 1.6;
   }
 
-  /* ── WORKFLOW ── */
+  /* WORKFLOW */
   .workflow {
+    width: 100%;
     padding: 80px 40px;
     border-bottom: 1px solid var(--border);
   }
 
   .workflow-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1px;
     background: var(--border);
     border: 1px solid var(--border);
@@ -590,14 +817,17 @@
   }
 
   .workflow-step {
+    min-width: 0;
     background: var(--surface);
     padding: 36px 28px;
     transition: background 0.15s;
   }
-  .workflow-step:hover { background: #fafaf9; }
+
+  .workflow-step:hover {
+    background: #fafaf9;
+  }
 
   .step-num {
-    font-family: 'Poppins', sans-serif;
     font-size: 48px;
     font-weight: 700;
     color: var(--blue-mid);
@@ -607,7 +837,6 @@
   }
 
   .step-title {
-    font-family: 'Poppins', sans-serif;
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 8px;
@@ -620,8 +849,9 @@
     line-height: 1.65;
   }
 
-  /* ── CTA ── */
+  /* CTA */
   .cta-section {
+    width: 100%;
     padding: 80px 40px;
     display: flex;
     flex-direction: column;
@@ -631,7 +861,6 @@
   }
 
   .cta-title {
-    font-family: 'Poppins', sans-serif;
     font-size: 40px;
     font-weight: 700;
     letter-spacing: -1.2px;
@@ -656,17 +885,20 @@
     border: none;
     border-radius: var(--radius);
     font-size: 15px;
-    font-family: 'Poppins', sans-serif;
     font-weight: 500;
     cursor: pointer;
     transition: background 0.15s;
     text-decoration: none;
     display: inline-block;
   }
-  .btn-cta:hover { background: #1d51d4; }
 
-  /* ── FOOTER ── */
+  .btn-cta:hover {
+    background: #1d51d4;
+  }
+
+  /* FOOTER */
   footer {
+    width: 100%;
     padding: 32px 40px;
     border-top: 1px solid var(--border);
     display: flex;
@@ -682,146 +914,182 @@
     color: var(--ink-3);
   }
 
-  /* ── HAMBURGER ── */
-  .menu-toggle {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 4px;
-    z-index: 200;
-  }
-  .menu-toggle span {
-    display: block;
-    width: 22px;
-    height: 2px;
-    background: var(--ink);
-    border-radius: 2px;
-    transition: all 0.25s ease;
-  }
-  .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .menu-toggle.open span:nth-child(2) { opacity: 0; }
-  .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-  .mobile-menu {
-    display: none;
-    flex-direction: column;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 20px;
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.3s ease, padding 0.3s ease;
-  }
-  .mobile-menu.open {
-    max-height: 320px;
-    padding: 16px 20px 20px;
-  }
-  .mobile-menu a {
-    font-size: 15px;
-    color: var(--ink-2);
-    text-decoration: none;
-    font-weight: 500;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .mobile-menu a:last-child { border-bottom: none; }
-  .mobile-menu .mobile-btns {
-    display: flex;
-    gap: 10px;
-    padding-top: 14px;
-  }
-  .mobile-menu .mobile-btns button,
-  .mobile-menu .mobile-btns a {
-    flex: 1;
-    text-align: center;
-    padding: 10px;
-    border-radius: var(--radius);
-    font-size: 14px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    text-decoration: none;
-  }
-  .mobile-menu .btn-m-ghost {
-    border: 1px solid var(--border) !important;
-    background: transparent;
-    color: var(--ink);
-  }
-  .mobile-menu .btn-m-primary {
-    background: var(--ink);
-    color: #fff;
+  /* RESPONSIVE */
+  @media (max-width: 1120px) {
+    .feature-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 
-  /* ── RESPONSIVE: LAPTOP 1024px ── */
   @media (max-width: 1024px) {
-    nav { padding: 18px 28px; }
+    nav {
+      padding: 18px 28px;
+    }
 
-    .hero-left { padding: 48px 28px; }
-    .hero-right { padding: 28px; }
-    .hero-headline { font-size: 38px; }
+    .hero-left {
+      padding: 48px 28px;
+    }
 
-    .features { padding: 64px 28px; }
-    .section-title { font-size: 28px; }
+    .hero-right {
+      padding: 28px;
+    }
 
-    .architecture { grid-template-columns: 1fr 1fr; }
-    .arch-left { padding: 64px 28px; }
-    .arch-right { padding: 28px; }
+    .hero-headline {
+      font-size: 38px;
+    }
 
-    .workflow { padding: 64px 28px; }
+    .features {
+      padding: 64px 28px;
+    }
 
-    .cta-section { padding: 72px 28px; }
-    .cta-title { font-size: 34px; }
+    .section-title {
+      font-size: 28px;
+    }
 
-    footer { padding: 28px; }
+    .arch-left {
+      padding: 64px 28px;
+    }
+
+    .arch-right {
+      padding: 28px;
+    }
+
+    .workflow {
+      padding: 64px 28px;
+    }
+
+    .cta-section {
+      padding: 72px 28px;
+    }
+
+    .cta-title {
+      font-size: 34px;
+    }
+
+    footer {
+      padding: 28px;
+    }
   }
 
-  /* ── RESPONSIVE: TABLET 768px ── */
   @media (max-width: 768px) {
-    nav { padding: 16px 20px; }
-    .nav-links { display: none; }
-    .nav-actions { display: none; }
-    .menu-toggle { display: flex; }
-    .mobile-menu { display: flex; }
+    nav {
+      padding: 16px 20px;
+    }
 
-    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .nav-links,
+    .nav-actions {
+      display: none;
+    }
+
+    .menu-toggle {
+      display: flex;
+    }
+
+    .mobile-menu {
+      display: flex;
+    }
+
+    .hero {
+      grid-template-columns: minmax(0, 1fr);
+      min-height: auto;
+    }
+
     .hero-left {
       padding: 44px 20px 40px;
       border-right: none;
       border-bottom: 1px solid var(--border);
     }
-    .hero-headline { font-size: 34px; letter-spacing: -1px; }
-    .hero-sub { font-size: 15px; max-width: 100%; }
-    .hero-right { padding: 24px 20px; background: var(--bg); }
 
-    .features { padding: 56px 20px; }
-    .section-title { font-size: 26px; }
-    .section-sub { max-width: 100%; margin-bottom: 36px; }
-    .feature-grid { grid-template-columns: repeat(2, 1fr); }
-    .feature-cell { padding: 22px 18px; }
+    .hero-headline {
+      font-size: 34px;
+      letter-spacing: -1px;
+    }
 
-    .architecture { grid-template-columns: 1fr; }
+    .hero-sub {
+      font-size: 15px;
+      max-width: 100%;
+    }
+
+    .hero-right {
+      padding: 24px 20px;
+      background: var(--bg);
+    }
+
+    .hero-proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .proof-val {
+      font-size: 12px;
+    }
+
+    .features {
+      padding: 56px 20px;
+    }
+
+    .section-title {
+      font-size: 26px;
+    }
+
+    .section-sub {
+      max-width: 100%;
+      margin-bottom: 36px;
+    }
+
+    .feature-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .feature-cell {
+      padding: 22px 18px;
+    }
+
+    .architecture {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
     .arch-left {
       padding: 56px 20px 40px;
       border-right: none;
       border-bottom: 1px solid var(--border);
     }
-    .arch-right { padding: 24px 20px; }
 
-    .workflow { padding: 56px 20px; }
+    .arch-right {
+      padding: 24px 20px;
+    }
+
+    .workflow {
+      padding: 56px 20px;
+    }
+
     .workflow-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       margin-top: 36px;
     }
-    .workflow-step { padding: 28px 22px; }
-    .step-num { font-size: 36px; margin-bottom: 10px; }
 
-    .cta-section { padding: 64px 20px; }
-    .cta-title { font-size: 28px; letter-spacing: -0.8px; }
-    .cta-sub { font-size: 14px; }
+    .workflow-step {
+      padding: 28px 22px;
+    }
+
+    .step-num {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .cta-section {
+      padding: 64px 20px;
+    }
+
+    .cta-title {
+      font-size: 28px;
+      letter-spacing: -0.8px;
+    }
+
+    .cta-sub {
+      font-size: 14px;
+    }
 
     footer {
       padding: 24px 20px;
@@ -832,311 +1100,274 @@
     }
   }
 
-  /* ── RESPONSIVE: MOBILE 480px ── */
   @media (max-width: 480px) {
-    .hero-headline { font-size: 28px; letter-spacing: -0.5px; }
-    .badge { font-size: 11px; padding: 4px 10px; }
+    .hero-left {
+      padding-top: 36px;
+    }
 
-    .hero-ctas { flex-direction: column; gap: 10px; }
-    .btn-hero, .btn-hero-ghost { width: 100%; justify-content: center; text-align: center; }
+    .hero-headline {
+      font-size: 28px;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+    }
 
-    .hero-proof { gap: 20px; }
+    .hero-sub {
+      margin-bottom: 28px;
+    }
 
-    .demo-card-body { padding: 16px 14px; }
-    .url-chip { font-size: 12px; }
-    .url-chip.short { font-size: 13px; }
-    .url-label { width: 36px; font-size: 10px; }
+    .badge {
+      font-size: 11px;
+      padding: 4px 10px;
+    }
 
-    .feature-grid { grid-template-columns: 1fr; }
-    .feature-cell { padding: 20px 16px; }
+    .hero-ctas {
+      flex-direction: column;
+      gap: 10px;
+    }
 
-    .section-title { font-size: 22px; }
-    .section-sub { font-size: 14px; margin-bottom: 28px; }
+    .btn-hero,
+    .btn-hero-ghost {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
 
-    .arch-card { flex-direction: column; gap: 8px; }
+    .hero-proof {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
 
-    .stats-grid { grid-template-columns: repeat(3, 1fr); }
-    .stat-num { font-size: 15px; }
+    .hero-proof > div {
+      padding: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
 
-    .cta-title { font-size: 24px; }
-    .btn-cta { width: 100%; text-align: center; }
+    .hero-right {
+      display: block;
+      padding: 14px;
+    }
+
+    .demo-card {
+      margin-bottom: 14px;
+    }
+
+    .demo-card-body {
+      padding: 16px 14px;
+    }
+
+    .url-row {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      align-items: flex-start;
+    }
+
+    .url-label {
+      width: auto;
+      font-size: 10px;
+      padding-top: 8px;
+    }
+
+    .url-chip {
+      font-size: 12px;
+    }
+
+    .url-chip.short {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .copy-btn {
+      padding: 5px 8px;
+      font-size: 11px;
+    }
+
+    .stats-grid {
+      gap: 6px;
+    }
+
+    .stat-desc {
+      font-size: 9px;
+    }
+
+    .feature-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .feature-cell {
+      padding: 20px 16px;
+    }
+
+    .feature-icon {
+      width: 34px;
+      height: 34px;
+    }
+
+    .section-title {
+      font-size: 22px;
+    }
+
+    .section-sub {
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .arch-card {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .workflow-step {
+      padding: 24px 18px;
+    }
+
+    .step-title {
+      font-size: 16px;
+    }
+
+    .mobile-menu .mobile-btns {
+      flex-direction: column;
+    }
+
+    .cta-title {
+      font-size: 24px;
+    }
+
+    .btn-cta {
+      width: 100%;
+      text-align: center;
+    }
   }
 
-  /* ── RESPONSIVE: SMALL MOBILE 360px ── */
   @media (max-width: 360px) {
-    nav { padding: 14px 16px; }
-    .logo { font-size: 19px; }
+    nav {
+      padding: 14px 16px;
+    }
 
-    .hero-left { padding: 32px 16px; }
-    .hero-right { padding: 16px; }
-    .hero-headline { font-size: 24px; }
+    .logo {
+      font-size: 19px;
+    }
 
-    .features, .workflow { padding: 40px 16px; }
-    .arch-left { padding: 40px 16px; }
-    .arch-right { padding: 16px; }
+    .hero-left {
+      padding: 32px 16px;
+    }
 
-    .cta-section { padding: 48px 16px; }
-    .cta-title { font-size: 22px; }
+    .hero-right {
+      padding: 16px;
+    }
 
-    footer { padding: 20px 16px; }
+    .hero-headline {
+      font-size: 23px;
+    }
+
+    .hero-sub {
+      font-size: 13px;
+    }
+
+    .btn-hero,
+    .btn-hero-ghost,
+    .btn-cta {
+      font-size: 14px;
+      padding: 11px 18px;
+    }
+
+    .url-chip.short {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .chip-actions {
+      width: 100%;
+      margin-left: 0;
+    }
+
+    .chip-actions .copy-btn {
+      flex: 1;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stat-cell {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-cell:last-child {
+      border-bottom: none;
+    }
+
+    .features,
+    .workflow {
+      padding: 40px 16px;
+    }
+
+    .arch-left {
+      padding: 40px 16px;
+    }
+
+    .arch-right {
+      padding: 16px;
+    }
+
+    .cta-section {
+      padding: 48px 16px;
+    }
+
+    .cta-title {
+      font-size: 22px;
+    }
+
+    footer {
+      padding: 20px 16px;
+    }
   }
-  /* ── EXTRA RESPONSIVE FIXES ── */
-
-/* Prevent horizontal scrolling */
-html, body {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-/* Images/SVG safety */
-svg {
-  max-width: 100%;
-}
-
-/* Better container behavior */
-.hero,
-.features,
-.architecture,
-.workflow,
-.cta-section,
-footer {
-  width: 100%;
-}
-
-/* Make long URLs behave properly */
-.url-chip {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Fix short URL row on mobile */
-.url-chip.short {
-  min-width: 0;
-}
-
-.url-chip.short span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Better mobile menu positioning */
-.mobile-menu {
-  position: sticky;
-  top: 65px;
-  z-index: 99;
-}
-
-/* Button tap improvement */
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ── TABLET FIXES ── */
-@media (max-width: 768px) {
-  body {
-    font-size: 14px;
-  }
-
-  nav {
-    position: sticky;
-    top: 0;
-  }
-
-  .hero-left {
-    text-align: left;
-  }
-
-  .hero-proof {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-
-  .proof-val {
-    font-size: 12px;
-  }
-
-  .demo-card,
-  .stats-card {
-    width: 100%;
-  }
-
-  .chart-bars {
-    gap: 4px;
-  }
-
-  .arch-card {
-    width: 100%;
-  }
-}
-
-/* ── MOBILE FIXES ── */
-@media (max-width: 480px) {
-  .hero-left {
-    padding-top: 36px;
-  }
-
-  .hero-headline {
-    line-height: 1.15;
-  }
-
-  .hero-sub {
-    margin-bottom: 28px;
-  }
-
-  .hero-proof {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .hero-proof > div {
-    padding: 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-  }
-
-  .url-row {
-    align-items: flex-start;
-  }
-
-  .url-label {
-    padding-top: 8px;
-  }
-
-  .copy-btn {
-    padding: 5px 8px;
-    font-size: 11px;
-  }
-
-  .stats-grid {
-    gap: 6px;
-  }
-
-  .stat-cell {
-    min-width: 0;
-  }
-
-  .stat-desc {
-    font-size: 9px;
-  }
-
-  .feature-icon {
-    width: 34px;
-    height: 34px;
-  }
-
-  .workflow-step {
-    padding: 24px 18px;
-  }
-
-  .step-title {
-    font-size: 16px;
-  }
-
-  .mobile-menu .mobile-btns {
-    flex-direction: column;
-  }
-}
-
-/* ── VERY SMALL MOBILE FIXES ── */
-@media (max-width: 360px) {
-  .hero-headline {
-    font-size: 23px;
-  }
-
-  .hero-sub {
-    font-size: 13px;
-  }
-
-  .btn-hero,
-  .btn-hero-ghost,
-  .btn-cta {
-    font-size: 14px;
-    padding: 11px 18px;
-  }
-
-  .url-chip.short {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .copy-btn {
-    margin-left: 0;
-    width: 100%;
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stat-cell {
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .stat-cell:last-child {
-    border-bottom: none;
-  }
-}
-@media (max-width: 480px) {
-  .hero-right {
-    display: block;
-    padding: 14px;
-  }
-
-  .url-row {
-    display: grid;
-    grid-template-columns: 34px minmax(0, 1fr);
-  }
-
-  .url-chip.short {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-  }
-
-  .stats-card,
-  .demo-card {
-    box-sizing: border-box;
-  }
-}
 </style>
 </head>
+
 <body>
 
-<!-- ── NAV ── -->
 <nav>
   <a href="/" class="logo">url<span>.</span>ify</a>
+
   <div class="nav-links">
     <a href="#features" class="nav-link">Features</a>
     <a href="#architecture" class="nav-link">Engineering</a>
     <a href="#workflow" class="nav-link">Workflow</a>
   </div>
+
   <div class="nav-actions">
-    <button class="btn-ghost" onclick="window.location.href='/pages/login'">Log in</button>
-    <button class="btn-primary" onclick="window.location.href='/pages/signup'">Get started</button>
+    <button class="btn-ghost" type="button" onclick="window.location.href='/pages/login'">
+      Log in
+    </button>
+
+    <button class="btn-primary" type="button" onclick="window.location.href='/pages/signup'">
+      Get started
+    </button>
   </div>
-  
+
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </nav>
 
-<!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
   <a href="#features">Features</a>
   <a href="#architecture">Engineering</a>
   <a href="#workflow">Workflow</a>
+
   <div class="mobile-btns">
     <a href="/pages/login" class="btn-m-ghost">Log in</a>
     <a href="/pages/signup" class="btn-m-primary">Get started</a>
   </div>
 </div>
 
-<!-- ── HERO ── -->
 <section class="hero">
   <div class="hero-left">
     <div class="badge">
@@ -1164,10 +1395,12 @@ a {
         <div class="proof-label">Cache</div>
         <div class="proof-val">Redis</div>
       </div>
+
       <div>
         <div class="proof-label">Storage</div>
         <div class="proof-val">PostgreSQL</div>
       </div>
+
       <div>
         <div class="proof-label">Auth</div>
         <div class="proof-val">JWT</div>
@@ -1176,42 +1409,55 @@ a {
   </div>
 
   <div class="hero-right">
-    <!-- URL Transform Demo -->
     <div class="demo-card">
       <div class="demo-card-header">
         <div class="demo-dot" style="background:#FF5F57"></div>
         <div class="demo-dot" style="background:#FEBC2E"></div>
         <div class="demo-dot" style="background:#28C840"></div>
-        <span style="font-size:12px; color:var(--ink-3); margin-left:6px; font-family:'Poppins',sans-serif;">urlify · link shortener</span>
+        <span class="demo-card-title">urlify · link shortener</span>
       </div>
+
       <div class="demo-card-body">
         <div class="url-transform">
           <div class="url-row">
             <span class="url-label">before</span>
-            <div class="url-chip long">https://www.example.com/blog/post?utm_source=newsletter&utm_campaign=q2</div>
+            <div class="url-chip long">
+              https://www.example.com/blog/post?utm_source=newsletter&utm_campaign=q2
+            </div>
           </div>
+
           <div class="arrow-row">
             <div class="arrow-line"></div>
             <span class="shrink-badge">↓ 74% shorter</span>
             <div class="arrow-line"></div>
           </div>
+
           <div class="url-row">
             <span class="url-label">after</span>
+
             <div class="url-chip short">
-              <span>urlify.io/<strong>q2news</strong></span>
-              <button class="copy-btn" onclick="copyLink(this)">Copy</button>
+              <span><span id="demoHostName">your-domain.com</span>/<strong>q2news</strong></span>
+              <div class="chip-actions">
+                <button class="copy-btn" type="button" onclick="copyLink(this)">
+                  Copy
+                </button>
+
+                <button class="copy-btn qr-mini-btn" type="button" onclick="showQrHint(this)">
+                  QR
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Analytics Preview -->
     <div class="stats-card">
       <div class="stats-header">
         <span class="stats-title">Click analytics · last 30 days</span>
         <span class="live-badge">● Live</span>
       </div>
+
       <div class="chart-bars">
         <div class="bar" style="height:30%; animation-delay:0.00s"></div>
         <div class="bar" style="height:55%; animation-delay:0.05s"></div>
@@ -1226,15 +1472,18 @@ a {
         <div class="bar" style="height:65%; animation-delay:0.50s"></div>
         <div class="bar" style="height:75%; animation-delay:0.55s"></div>
       </div>
+
       <div class="stats-grid">
         <div class="stat-cell">
           <span class="stat-num">19.4K</span>
           <span class="stat-desc">Total clicks</span>
         </div>
+
         <div class="stat-cell">
           <span class="stat-num">8.2K</span>
           <span class="stat-desc">Unique visitors</span>
         </div>
+
         <div class="stat-cell">
           <span class="stat-num" style="color:var(--blue)">IN</span>
           <span class="stat-desc">Top region</span>
@@ -1244,13 +1493,16 @@ a {
   </div>
 </section>
 
-<!-- ── FEATURES ── -->
 <section class="features" id="features">
   <div class="section-label">Platform</div>
-  <h2 class="section-title">Everything a link can tell you.</h2>
+
+  <h2 class="section-title">
+    Everything a link can tell you.
+  </h2>
+
   <p class="section-sub">
     Built with real backend infrastructure — not just pretty short links.
-    Authentication, caching, analytics, and exports all included.
+    Authentication, caching, analytics, QR downloads, and exports all included.
   </p>
 
   <div class="feature-grid">
@@ -1261,8 +1513,30 @@ a {
           <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
         </svg>
       </div>
+
       <div class="feature-title">Branded short links</div>
-      <p class="feature-desc">Custom aliases, expiry controls, and link status management in one place.</p>
+      <p class="feature-desc">
+        Custom aliases, expiry controls, and link status management in one place.
+      </p>
+    </div>
+
+    <div class="feature-cell">
+      <div class="feature-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <path d="M14 14h2v2h-2z"/>
+          <path d="M18 14h3v3"/>
+          <path d="M14 18h3"/>
+          <path d="M19 19h2v2h-2z"/>
+        </svg>
+      </div>
+
+      <div class="feature-title">Downloadable QR codes</div>
+      <p class="feature-desc">
+        Generate and download a QR code for every short link, ready for posters, cards, menus, and offline sharing.
+      </p>
     </div>
 
     <div class="feature-cell">
@@ -1273,8 +1547,11 @@ a {
           <line x1="6" y1="20" x2="6" y2="14"/>
         </svg>
       </div>
+
       <div class="feature-title">Deep click analytics</div>
-      <p class="feature-desc">Browser, device, OS, referrer, and region — every click captured and queryable.</p>
+      <p class="feature-desc">
+        Browser, device, OS, referrer, and region — every click captured and queryable.
+      </p>
     </div>
 
     <div class="feature-cell">
@@ -1285,8 +1562,11 @@ a {
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
         </svg>
       </div>
+
       <div class="feature-title">Geographic insights</div>
-      <p class="feature-desc">Country-level breakdown of where your audience clicks from, updated in real time.</p>
+      <p class="feature-desc">
+        Country-level breakdown of where your audience clicks from, updated in real time.
+      </p>
     </div>
 
     <div class="feature-cell">
@@ -1295,109 +1575,168 @@ a {
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.49 5.49l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
         </svg>
       </div>
+
       <div class="feature-title">Live click activity</div>
-      <p class="feature-desc">Instant activity updates the moment someone interacts with any of your links.</p>
+      <p class="feature-desc">
+        Instant activity updates the moment someone interacts with any of your links.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ── ARCHITECTURE ── -->
 <section class="architecture" id="architecture">
   <div class="arch-left">
     <div class="section-label">Engineering</div>
-    <h2 class="section-title">Production-grade from day one.</h2>
+
+    <h2 class="section-title">
+      Production-grade from day one.
+    </h2>
+
     <p class="section-sub">
       URLify isn't a mock project. It's built with the same patterns you'd find
       in a real-world link platform — fast redirects, secure auth, and structured
       analytics processing.
     </p>
   </div>
+
   <div class="arch-right">
     <div class="arch-card">
       <span class="arch-num">01</span>
+
       <div class="arch-content">
         <h4>Redirect engine</h4>
-        <p>Sub-millisecond redirects via Redis cache, with PostgreSQL fallback for new or expired entries.</p>
+        <p>
+          Low-latency redirects through Redis caching, with PostgreSQL fallback for new or expired entries.
+        </p>
       </div>
     </div>
+
     <div class="arch-card">
       <span class="arch-num">02</span>
+
       <div class="arch-content">
         <h4>Analytics pipeline</h4>
-        <p>Captures click source, country, device type, browser, OS, and redirect timing on every hit.</p>
+        <p>
+          Captures click source, country, device type, browser, OS, and redirect timing on every hit.
+        </p>
       </div>
     </div>
+
     <div class="arch-card">
       <span class="arch-num">03</span>
+
       <div class="arch-content">
         <h4>Secure workspace</h4>
-        <p>JWT authentication, hashed passwords, protected routes, and per-user data isolation.</p>
+        <p>
+          JWT authentication, hashed passwords, protected routes, and per-user data isolation.
+        </p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── WORKFLOW ── -->
 <section class="workflow" id="workflow">
   <div class="section-label">Workflow</div>
-  <h2 class="section-title">From long URL to actionable insight.</h2>
+
+  <h2 class="section-title">
+    From long URL to actionable insight.
+  </h2>
 
   <div class="workflow-grid">
     <div class="workflow-step">
       <div class="step-num">01</div>
       <div class="step-title">Paste your URL</div>
-      <p class="step-desc">Drop in any long URL. Add a custom alias or let URLify generate one — then set an optional expiry.</p>
+      <p class="step-desc">
+        Drop in any long URL. Add a custom alias or let URLify generate one — then set an optional expiry.
+      </p>
     </div>
+
     <div class="workflow-step">
       <div class="step-num">02</div>
       <div class="step-title">Share the short link</div>
-      <p class="step-desc">Your clean link is ready instantly. Share it anywhere — email, social, docs, or ads.</p>
+      <p class="step-desc">
+        Share the clean link anywhere, or download its QR code for posters, menus, cards, and offline campaigns.
+      </p>
     </div>
+
     <div class="workflow-step">
       <div class="step-num">03</div>
       <div class="step-title">Watch the data arrive</div>
-      <p class="step-desc">Track clicks, regions, devices, and referrers in real time from your dashboard.</p>
+      <p class="step-desc">
+        Track clicks, regions, devices, and referrers in real time from your dashboard.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ── CTA ── -->
 <section class="cta-section">
-  <h2 class="cta-title">Build smarter links with URLify.</h2>
+  <h2 class="cta-title">
+    Build smarter links with URLify.
+  </h2>
+
   <p class="cta-sub">
     A complete link management platform with real backend, caching, authentication,
-    and production-style analytics.
+    QR downloads, and production-style analytics.
   </p>
-  <a href="/pages/signup" class="btn-cta">Create your account →</a>
+
+  <a href="/pages/signup" class="btn-cta">
+    Create your account →
+  </a>
 </section>
 
-<!-- ── FOOTER ── -->
 <footer>
   <a href="/" class="logo">url<span>.</span>ify</a>
   <span class="footer-sub">© 2026 URLify · Fast links, smarter insights.</span>
 </footer>
 
 <script>
+  const demoHostName = document.getElementById("demoHostName");
+
+if (demoHostName) {
+  demoHostName.textContent = window.location.host;
+}
   function copyLink(btn) {
-    navigator.clipboard.writeText('https://urlify.io/q2news').then(() => {
+    navigator.clipboard.writeText(`${window.location.origin}/q2news`).then(() => {
       const original = btn.textContent;
-      btn.textContent = 'Copied!';
-      btn.style.background = '#047857';
+
+      btn.textContent = "Copied!";
+      btn.style.background = "#047857";
+
       setTimeout(() => {
         btn.textContent = original;
-        btn.style.background = '';
+        btn.style.background = "";
       }, 2000);
     });
   }
 
-  /* Smooth scroll for nav anchor links */
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
+  function showQrHint(btn) {
+    const original = btn.textContent;
+
+    btn.textContent = "Ready";
+    btn.style.background = "#047857";
+
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.style.background = "";
+    }, 2000);
+  }
+
+  const menuToggle = document.getElementById("menuToggle");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  if (menuToggle && mobileMenu) {
+    menuToggle.addEventListener("click", () => {
+      menuToggle.classList.toggle("open");
+      mobileMenu.classList.toggle("open");
     });
-  });
+
+    mobileMenu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        menuToggle.classList.remove("open");
+        mobileMenu.classList.remove("open");
+      });
+    });
+  }
 </script>
 
 </body>

@@ -15,7 +15,8 @@ const {
 const {
   loginPage,
   signupPage,
-  dashboardPage
+  dashboardPage,
+  termsPage
 } = require(
   "../controllers/page.controller"
 );
@@ -34,7 +35,11 @@ router.get(
   redirectIfAuthenticated,
   signupPage
 );
-
+router.get(
+  "/terms",
+  redirectIfAuthenticated,
+  termsPage
+);
 router.get(
   "/dashboard",
   requireAuth,

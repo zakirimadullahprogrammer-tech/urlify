@@ -35,9 +35,20 @@ function dashboardPage(req, res) {
     )
   );
 }
-
+function termsPage(req, res) {
+  return res.status(200).sendFile(
+    path.join(
+      __dirname,
+      "..",
+      "public",
+      "pages",
+      "terms.html"
+    )
+  );
+}
 module.exports = {
   loginPage,
   signupPage,
-  dashboardPage
+  dashboardPage,
+  termsPage
 };
