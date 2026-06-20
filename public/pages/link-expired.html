@@ -842,9 +842,7 @@
             <div class="url-transform">
               <div class="url-row">
                 <span class="url-label">link</span>
-                <div class="url-chip old">
-                  urlify.io/q2news
-                </div>
+               <div class="url-chip old" id="originalLink">Loading...</div>
               </div>
 
               <div class="arrow-row">
@@ -904,6 +902,13 @@
     </section>
 
   </main>
+<script>
+  const path = window.location.pathname + window.location.search;
+  const host = window.location.host;
 
+  const fullUrl = window.location.origin + window.location.pathname + window.location.search;
+
+  document.getElementById("originalLink").textContent = fullUrl;
+</script>
 </body>
 </html>

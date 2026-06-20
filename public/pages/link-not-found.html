@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Link Not Found | URLify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sofia&display=swap" rel="stylesheet">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +20,11 @@
       margin: 0;
       padding: 0;
     }
+
+.sofia-bold {
+  font-family: "Sofia", cursive;
+  font-weight: 700;
+}
 
     :root {
       --ink: #111110;
@@ -398,6 +404,9 @@
       border: 1px solid var(--blue-mid);
       font-weight: 600;
     }
+    .url-chip.old{
+      padding: 0px !important;
+    }
 
     .url-chip.missing {
       background: var(--red-light);
@@ -776,7 +785,7 @@
             <div class="demo-dot" style="background:#FF5F57"></div>
             <div class="demo-dot" style="background:#FEBC2E"></div>
             <div class="demo-dot" style="background:#28C840"></div>
-            <span>urlify · redirect lookup</span>
+            <span><span class="sofia-bold">urlify</span> · redirect lookup</span>
           </div>
 
           <div class="demo-card-body">
@@ -784,7 +793,7 @@
               <div class="url-row">
                 <span class="url-label">link</span>
                 <div class="url-chip request">
-                  urlify.io/unknown
+                  <div class="url-chip old" id="originalLink"></div>
                 </div>
               </div>
 
@@ -819,7 +828,7 @@
             <div class="status-content">
               <h3>Link check failed</h3>
               <p>
-                URLify searched for this short code, but no matching destination exists.
+                <span class="sofia-bold">urlify</span> searched for this short code, but no matching destination exists.
               </p>
             </div>
           </div>
@@ -848,17 +857,27 @@
   </main>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
+  (() => {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
 
-    const requestedLinkBox = document.getElementById("requestedLinkBox");
-    const requestedShortCode = document.getElementById("requestedShortCode");
+  const requestedLinkBox = document.getElementById("requestedLinkBox");
+  const requestedShortCode = document.getElementById("requestedShortCode");
+  const originalLink = document.getElementById("originalLink");
 
-    if (code && requestedLinkBox && requestedShortCode) {
-      requestedShortCode.textContent = "/" + code;
-      requestedLinkBox.classList.add("show");
-      requestedLinkBox.style.display = window.innerWidth <= 480 ? "grid" : "flex";
-    }
+  const fullUrl = window.location.host + window.location.pathname;
+
+  if (originalLink) {
+    originalLink.textContent = fullUrl;
+  }
+
+  if (code && requestedLinkBox && requestedShortCode) {
+    requestedShortCode.textContent = "/" + code;
+    requestedLinkBox.classList.add("show");
+    requestedLinkBox.style.display = window.innerWidth <= 480 ? "grid" : "flex";
+  }
+})();
+
   </script>
 
 </body>

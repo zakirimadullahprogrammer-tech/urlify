@@ -992,24 +992,59 @@ async function copyLink(event, shortLink) {
   }
 }
 
-function downloadQR(url) {
-  const encodedUrl = encodeURIComponent(url);
+async function downloadQR(url) {
+  try {
+    const response = await fetch(
+      `/api/qr?url=${encodeURIComponent(url)}`
+    );
 
-  const link = document.createElement("a");
-  link.href = `/api/qr?url=${encodedUrl}`;
-  link.download = "qrcode.png";
+    const contentType = response.headers.get("content-type") || "";
 
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    if (!response.ok) {
+      let message = "Failed to generate QR code.";
 
-  showToast(
-    "QR code downloaded",
-    "The QR code image has been saved.",
-    "success"
-  );
+      if (contentType.includes("application/json")) {
+        const data = await response.json();
+        message = data.message || message;
+      }
+
+      showToast(
+        "Download failed",
+        message,
+        "error"
+      );
+      return;
+    }
+
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = "qrcode.png";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(blobUrl);
+
+    showToast(
+      "QR code downloaded",
+      "The QR code image has been saved.",
+      "success"
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    showToast(
+      "Something went wrong",
+      "Unable to contact the server. Please try again.",
+      "error"
+    );
+  }
 }
-
 function refreshLinksAfterClick() {
   if (!shouldRefreshLinks) return;
 
