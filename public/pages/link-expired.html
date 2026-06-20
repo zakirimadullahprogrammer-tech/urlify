@@ -9,134 +9,230 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sofia&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sofia&display=swap"
     rel="stylesheet"
   >
 
   <style>
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-     .sofia-bold {
-  font-family: "Sofia", cursive;
-  font-weight: 800;
-  font-style: bold;
-}
 
+    :root {
+      --ink: #111110;
+      --ink-2: #3a3a38;
+      --ink-3: #7a7a76;
+      --bg: #F7F6F3;
+      --surface: #ffffff;
+      --border: rgba(0,0,0,0.10);
+      --blue: #2563EB;
+      --blue-light: #EFF4FF;
+      --blue-mid: #BFCFFD;
+      --red: #B91C1C;
+      --red-light: #FEF3F2;
+      --red-border: #FCA5A5;
+      --green: #047857;
+      --green-light: #ECFDF5;
+      --green-border: #A7F3D0;
+      --radius: 10px;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
 
     body {
       min-height: 100vh;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(239, 68, 68, 0.15), transparent 34%),
-        radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.14), transparent 36%),
-        linear-gradient(135deg, #fff1f2 0%, #eef2ff 100%);
-      color: #111827;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* NAV */
+    nav {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    .page-shell {
-      width: 100%;
-      max-width: 980px;
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 28px;
-      align-items: center;
+    .logo {
+      font-family: 'Sofia', cursive;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--ink);
     }
 
-    .card {
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(226, 232, 240, 0.9);
-      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
-      backdrop-filter: blur(18px);
-      border-radius: 28px;
-      padding: 38px;
+    .logo span {
+      color: var(--blue);
     }
 
-    .brand {
-      display: inline-flex;
+    .nav-actions {
+      display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 28px;
     }
 
-    .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #2563eb, #38bdf8);
+    .btn-nav-ghost {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: transparent;
+      border-radius: var(--radius);
+      font-size: 14px;
+      color: var(--ink);
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+
+    .btn-nav-ghost:hover {
+      background: var(--bg);
+    }
+
+    .btn-nav-primary {
+      padding: 8px 18px;
+      background: var(--ink);
+      color: #fff;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+
+    .btn-nav-primary:hover {
+      background: #222220;
+    }
+
+    /* PAGE */
+    .page-shell {
+      width: 100%;
+      min-height: calc(100vh - 81px);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .expired-panel {
+      min-width: 0;
+      padding: 64px 40px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 800;
-      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.28);
+      border-right: 1px solid var(--border);
     }
 
-    .brand-name {
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: -0.04em;
+    .expired-inner {
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto;
     }
 
-    .eyebrow {
+    .badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: #fff1f2;
-      color: #be123c;
-      border: 1px solid #fecdd3;
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 18px;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--red);
+      background: var(--red-light);
+      border: 1px solid var(--red-border);
+      border-radius: 20px;
+      padding: 5px 12px;
+      width: fit-content;
+      margin-bottom: 24px;
     }
 
-    h1 {
-      font-size: clamp(36px, 5vw, 58px);
-      line-height: 0.95;
-      letter-spacing: -0.06em;
-      margin-bottom: 18px;
-      color: #0f172a;
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--red);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .headline {
+      font-size: 46px;
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    .headline em {
+      font-style: normal;
+      color: var(--red);
     }
 
     .subtitle {
-      color: #475569;
-      font-size: 17px;
+      font-size: 16px;
+      color: var(--ink-3);
       line-height: 1.7;
-      max-width: 560px;
-      margin-bottom: 24px;
+      max-width: 500px;
+      margin-bottom: 30px;
+    }
+
+    .subtitle strong {
+      font-family: 'Sofia', cursive;
+      font-weight: 400;
+      color: var(--ink);
     }
 
     .short-code-box {
       display: none;
       align-items: center;
       gap: 10px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
+      width: 100%;
+      max-width: 500px;
+      background: var(--surface);
+      border: 1px solid var(--border);
       padding: 13px 14px;
-      border-radius: 16px;
+      border-radius: 12px;
       margin-bottom: 28px;
-      color: #334155;
+      color: var(--ink-2);
       overflow: hidden;
     }
 
     .short-code-label {
-      font-size: 13px;
-      font-weight: 700;
-      color: #64748b;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       flex-shrink: 0;
     }
 
     .short-code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 14px;
+      min-width: 0;
+      font-size: 13px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -146,20 +242,20 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
+      margin-bottom: 42px;
     }
 
     .btn {
-      text-decoration: none;
       border: none;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: 14px;
-      padding: 13px 18px;
-      font-size: 14px;
-      font-weight: 800;
-      transition: transform 0.18s ease, background 0.18s ease;
+      border-radius: var(--radius);
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: background 0.15s, transform 0.15s;
     }
 
     .btn:hover {
@@ -167,59 +263,206 @@
     }
 
     .btn-primary {
-      background: #2563eb;
+      background: var(--blue);
       color: white;
-      box-shadow: 0 14px 32px rgba(37, 99, 235, 0.28);
     }
 
     .btn-primary:hover {
-      background: #1d4ed8;
+      background: #1d51d4;
     }
 
     .btn-secondary {
-      background: white;
-      color: #111827;
-      border: 1px solid #e5e7eb;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--border);
     }
 
     .btn-secondary:hover {
-      background: #f8fafc;
+      background: #eeeeed;
     }
 
-    .visual-card {
-      min-height: 430px;
-      position: relative;
-      overflow: hidden;
+    .proof-row {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .proof-label {
+      font-size: 11px;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+    }
+
+    .proof-val {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-2);
+      margin-top: 2px;
+    }
+
+    /* RIGHT VISUAL */
+    .visual-panel {
+      min-width: 0;
+      padding: 40px;
+      background: var(--surface);
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .visual-bg {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(135deg, rgba(239, 68, 68, 0.12), transparent),
-        radial-gradient(circle at 70% 20%, rgba(37, 99, 235, 0.2), transparent 32%);
+    .visual-stack {
+      width: 100%;
+      max-width: 520px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .demo-card,
+    .status-card,
+    .infra-card {
+      width: 100%;
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .demo-card-header,
+    .status-card-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .demo-card-header span:last-child,
+    .status-card-header span {
+      font-size: 12px;
+      color: var(--ink-3);
+      margin-left: 6px;
+    }
+
+    .demo-card-body {
+      padding: 20px 18px;
+    }
+
+    .url-transform {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .url-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .url-label {
+      font-size: 11px;
+      color: var(--ink-3);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      width: 42px;
+      flex-shrink: 0;
+    }
+
+    .url-chip {
+      min-width: 0;
+      flex: 1;
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 7px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .url-chip.old {
+      background: var(--blue-light);
+      color: var(--blue);
+      border: 1px solid var(--blue-mid);
+      font-weight: 600;
+    }
+
+    .url-chip.expired {
+      background: var(--red-light);
+      color: var(--red);
+      border: 1px solid var(--red-border);
+      font-weight: 600;
+    }
+
+    .arrow-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 52px;
+      min-width: 0;
+    }
+
+    .arrow-line {
+      height: 1px;
+      flex: 1;
+      background: var(--border);
+    }
+
+    .expired-badge {
+      font-size: 11px;
+      background: var(--red-light);
+      color: var(--red);
+      border: 1px solid var(--red-border);
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .status-card {
+      padding: 0;
+    }
+
+    .status-body {
+      padding: 22px 18px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
     }
 
     .expired-icon {
-      position: relative;
-      width: 250px;
-      height: 250px;
+      width: 96px;
+      height: 96px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #ffe4e6, #ffffff);
-      border: 1px solid #fecdd3;
+      background: var(--red-light);
+      border: 1px solid var(--red-border);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: inset 0 0 60px rgba(239, 68, 68, 0.1);
+      position: relative;
+      flex-shrink: 0;
     }
 
     .clock {
-      width: 130px;
-      height: 130px;
-      border: 14px solid #ef4444;
+      width: 54px;
+      height: 54px;
+      border: 6px solid var(--red);
       border-radius: 50%;
       position: relative;
       background: rgba(255, 255, 255, 0.65);
@@ -228,161 +471,439 @@
     .clock::before {
       content: "";
       position: absolute;
-      width: 12px;
-      height: 42px;
-      background: #ef4444;
+      width: 5px;
+      height: 18px;
+      background: var(--red);
       border-radius: 999px;
       left: 50%;
-      top: 24px;
+      top: 10px;
       transform: translateX(-50%);
-      transform-origin: bottom center;
     }
 
     .clock::after {
       content: "";
       position: absolute;
-      width: 44px;
-      height: 12px;
-      background: #ef4444;
+      width: 20px;
+      height: 5px;
+      background: var(--red);
       border-radius: 999px;
       left: 50%;
       top: 50%;
       transform: translateY(-50%);
-      transform-origin: left center;
     }
 
     .cross-line {
       position: absolute;
-      width: 16px;
-      height: 180px;
+      width: 7px;
+      height: 78px;
       border-radius: 999px;
-      background: #be123c;
+      background: var(--red);
       transform: rotate(38deg);
-      box-shadow: 0 12px 30px rgba(190, 18, 60, 0.22);
     }
 
-    .mini-panel {
-      position: absolute;
-      left: 28px;
-      bottom: 28px;
-      right: 28px;
-      background: rgba(255,255,255,0.84);
-      border: 1px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 16px;
-      backdrop-filter: blur(14px);
-    }
-
-    .mini-panel-title {
-      font-weight: 800;
-      color: #0f172a;
+    .status-content h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
       margin-bottom: 6px;
+      letter-spacing: -0.3px;
     }
 
-    .mini-panel-text {
+    .status-content p {
       font-size: 13px;
-      color: #64748b;
-      line-height: 1.5;
+      color: var(--ink-3);
+      line-height: 1.65;
     }
 
-    @media (max-width: 860px) {
-      .page-shell {
-        grid-template-columns: 1fr;
+    .infra-card {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .infra-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      background: var(--bg);
+    }
+
+    .infra-item span {
+      display: block;
+      font-size: 10px;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .infra-item strong {
+      font-size: 13px;
+      color: var(--ink-2);
+      font-weight: 700;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      nav {
+        padding: 18px 28px;
       }
 
-      .visual-card {
-        min-height: 320px;
+      .expired-panel {
+        padding: 56px 28px;
       }
 
-      .card {
+      .visual-panel {
         padding: 28px;
       }
 
-      .expired-icon {
-        width: 210px;
-        height: 210px;
-      }
-
-      .clock {
-        width: 112px;
-        height: 112px;
+      .headline {
+        font-size: 38px;
       }
     }
 
-    @media (max-width: 520px) {
-      body {
-        padding: 16px;
+    @media (max-width: 768px) {
+      nav {
+        padding: 16px 20px;
       }
 
-      .card {
-        border-radius: 22px;
-        padding: 24px;
+      .page-shell {
+        min-height: auto;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .expired-panel {
+        padding: 44px 20px 40px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .expired-inner {
+        max-width: 560px;
+      }
+
+      .headline {
+        font-size: 34px;
+        letter-spacing: -1px;
+      }
+
+      .subtitle {
+        font-size: 15px;
+        max-width: 100%;
+      }
+
+      .visual-panel {
+        padding: 24px 20px;
+        background: var(--bg);
+      }
+
+      .visual-stack {
+        max-width: 560px;
+      }
+
+      .proof-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .proof-row > div {
+        padding: 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-actions {
+        gap: 8px;
+      }
+
+      .btn-nav-ghost,
+      .btn-nav-primary {
+        padding: 8px 12px;
+        font-size: 13px;
+      }
+
+      .logo {
+        font-size: 20px;
+      }
+
+      .expired-panel {
+        padding: 36px 16px 32px;
+      }
+
+      .badge {
+        font-size: 10px;
+        padding: 4px 10px;
+        margin-bottom: 18px;
+      }
+
+      .headline {
+        font-size: 28px;
+        line-height: 1.15;
+        letter-spacing: -0.6px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+        margin-bottom: 24px;
       }
 
       .actions {
         flex-direction: column;
+        margin-bottom: 30px;
       }
 
       .btn {
         width: 100%;
+        padding: 12px 18px;
+        font-size: 14px;
       }
 
-      .visual-card {
+      .proof-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .short-code-box {
         display: none;
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      .visual-panel {
+        padding: 16px;
+      }
+
+      .demo-card-body {
+        padding: 16px 14px;
+      }
+
+      .url-row {
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr);
+      }
+
+      .url-chip {
+        font-size: 11px;
+        padding: 8px 10px;
+      }
+
+      .arrow-row {
+        padding-left: 52px;
+      }
+
+      .status-body {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+
+      .expired-icon {
+        width: 84px;
+        height: 84px;
+      }
+
+      .clock {
+        width: 48px;
+        height: 48px;
+      }
+
+      .infra-card {
+        grid-template-columns: 1fr;
+        padding: 14px;
       }
     }
+
+    @media (max-width: 360px) {
+      nav {
+        padding: 14px 16px;
+      }
+
+      .nav-actions {
+        display: none;
+      }
+
+      .expired-panel {
+        padding: 32px 14px 28px;
+      }
+
+      .headline {
+        font-size: 25px;
+      }
+
+      .subtitle {
+        font-size: 13px;
+      }
+
+      .visual-panel {
+        padding: 14px;
+      }
+
+      .demo-card-header,
+      .status-card-header {
+        padding: 12px 14px;
+      }
+    }
+    @media (max-width: 480px) {
+  .visual-panel {
+    display: none;
+  }
+}
   </style>
 </head>
 
 <body>
+
+  <nav>
+    <a href="/" class="logo">url<span>.</span>ify</a>
+
+    <div class="nav-actions">
+      <a class="btn-nav-ghost" href="/">
+        Home
+      </a>
+
+      <a class="btn-nav-primary" href="/pages/login">
+        Log in
+      </a>
+    </div>
+  </nav>
+
   <main class="page-shell">
-    <section class="card">
-      <div class="brand">
-        <div class="brand-name sofia-bold">urlify</div>
-      </div>
 
-      <div class="eyebrow">
-        410 · Link expired
-      </div>
+    <section class="expired-panel">
+      <div class="expired-inner">
 
-      <h1>This link has expired.</h1>
-
-      <p class="subtitle">
-        The <span class="sofia-bold">urlify</span> short link you opened was valid before, but its expiration time has passed.
-        The owner can create a new short link or extend the expiry from their dashboard.
-      </p>
-
-      <div id="requestedLinkBox" class="short-code-box">
-        <span class="short-code-label">Requested link</span>
-        <span id="requestedShortCode" class="short-code"></span>
-      </div>
-
-      <div class="actions">
-        <a class="btn btn-primary" href="/pages/dashboard">
-          Go to dashboard
-        </a>
-
-        <a class="btn btn-secondary" href="/">
-          Visit homepage
-        </a>
-      </div>
-    </section>
-
-    <section class="card visual-card" aria-hidden="true">
-      <div class="visual-bg"></div>
-
-      <div class="expired-icon">
-        <div class="clock"></div>
-        <div class="cross-line"></div>
-      </div>
-
-      <div class="mini-panel">
-        <div class="mini-panel-title">Redirect expired</div>
-        <div class="mini-panel-text">
-          This short link reached its expiry limit, so <span class="sofia-bold">urlify</span> stopped forwarding it.
+        <div class="badge">
+          <span class="dot"></span>
+          410 · Link expired
         </div>
+
+        <h1 class="headline">
+          This link has <em>expired</em>.
+        </h1>
+
+        <p class="subtitle">
+          The <strong>urlify</strong> short link you opened was valid before, but its expiration time has passed.
+          The owner can create a new short link or extend the expiry from their dashboard.
+        </p>
+
+        <div id="requestedLinkBox" class="short-code-box">
+          <span class="short-code-label">Requested link</span>
+          <span id="requestedShortCode" class="short-code"></span>
+        </div>
+
+        <div class="actions">
+          <a class="btn btn-primary" href="/pages/dashboard">
+            Go to dashboard →
+          </a>
+
+          <a class="btn btn-secondary" href="/">
+            Visit homepage
+          </a>
+        </div>
+
+        <div class="proof-row">
+          <div>
+            <div class="proof-label">Status</div>
+            <div class="proof-val">Expired</div>
+          </div>
+
+          <div>
+            <div class="proof-label">Safety</div>
+            <div class="proof-val">Redirect stopped</div>
+          </div>
+
+          <div>
+            <div class="proof-label">Owner action</div>
+            <div class="proof-val">Extend expiry</div>
+          </div>
+        </div>
+
       </div>
     </section>
+
+    <section class="visual-panel" aria-hidden="true">
+      <div class="visual-stack">
+
+        <div class="demo-card">
+          <div class="demo-card-header">
+            <div class="demo-dot" style="background:#FF5F57"></div>
+            <div class="demo-dot" style="background:#FEBC2E"></div>
+            <div class="demo-dot" style="background:#28C840"></div>
+            <span>urlify · redirect status</span>
+          </div>
+
+          <div class="demo-card-body">
+            <div class="url-transform">
+              <div class="url-row">
+                <span class="url-label">link</span>
+                <div class="url-chip old">
+                  urlify.io/q2news
+                </div>
+              </div>
+
+              <div class="arrow-row">
+                <div class="arrow-line"></div>
+                <span class="expired-badge">expired</span>
+                <div class="arrow-line"></div>
+              </div>
+
+              <div class="url-row">
+                <span class="url-label">result</span>
+                <div class="url-chip expired">
+                  redirect blocked · 410
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <div class="status-card-header">
+            <span>Expiry protection</span>
+          </div>
+
+          <div class="status-body">
+            <div class="expired-icon">
+              <div class="clock"></div>
+              <div class="cross-line"></div>
+            </div>
+
+            <div class="status-content">
+              <h3>Redirect expired</h3>
+              <p>
+                URLify stopped forwarding this short link because its configured expiry time has passed.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="infra-card">
+          <div class="infra-item">
+            <span>Rule</span>
+            <strong>Expiry check</strong>
+          </div>
+
+          <div class="infra-item">
+            <span>Response</span>
+            <strong>410 Gone</strong>
+          </div>
+
+          <div class="infra-item">
+            <span>Action</span>
+            <strong>Renew link</strong>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </main>
+
 </body>
 </html>

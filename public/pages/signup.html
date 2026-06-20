@@ -1,197 +1,1149 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="../styles/mediaQueries.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sofia&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/signup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sofia&display=swap" rel="stylesheet">
 
   <title>Create URLify Account | URLify</title>
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --ink: #111110;
+      --ink-2: #3a3a38;
+      --ink-3: #7a7a76;
+      --bg: #F7F6F3;
+      --surface: #ffffff;
+      --border: rgba(0,0,0,0.10);
+      --blue: #2563EB;
+      --blue-light: #EFF4FF;
+      --blue-mid: #BFCFFD;
+      --green: #047857;
+      --green-light: #ECFDF5;
+      --green-border: #A7F3D0;
+      --red: #B91C1C;
+      --red-light: #FEF3F2;
+      --red-border: #FCA5A5;
+      --radius: 10px;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input,
+    a {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Sofia', cursive;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    .logo span {
+      color: var(--blue);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-ghost {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: transparent;
+      border-radius: var(--radius);
+      font-size: 14px;
+      color: var(--ink);
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg);
+    }
+
+    .btn-primary {
+      padding: 8px 18px;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: #222220;
+    }
+
+    /* PAGE */
+    .auth-page {
+      width: 100%;
+      min-height: calc(100vh - 81px);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .auth-panel {
+      min-width: 0;
+      padding: 44px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+    }
+
+    .auth-panel-inner {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--blue);
+      background: var(--blue-light);
+      border: 1px solid var(--blue-mid);
+      border-radius: 20px;
+      padding: 5px 12px;
+      width: fit-content;
+      margin-bottom: 22px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--blue);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .auth-brand {
+      margin-bottom: 24px;
+    }
+
+    .auth-brand h1 {
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -1.2px;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .auth-brand h1 em {
+      font-style: normal;
+      color: var(--blue);
+    }
+
+    .auth-brand p {
+      color: var(--ink-3);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 420px;
+    }
+
+    /* AUTH CARD */
+    .auth-card {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .auth-card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .auth-card-header span:last-child {
+      font-size: 12px;
+      color: var(--ink-3);
+      margin-left: 6px;
+    }
+
+    .auth-card-body {
+      padding: 22px;
+    }
+
+    .auth-header {
+      margin-bottom: 20px;
+    }
+
+    .auth-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue-light);
+      color: var(--blue);
+      border: 1px solid var(--blue-mid);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .auth-icon .material-symbols-outlined {
+      font-size: 22px;
+    }
+
+    .auth-header h2 {
+      font-size: 23px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .auth-header p {
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.65;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .auth-form label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-2);
+    }
+
+    .auth-input-wrap {
+      width: 100%;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+
+    .auth-input-wrap:focus-within {
+      border-color: var(--blue-mid);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+      background: #fff;
+    }
+
+    .auth-input-wrap .material-symbols-outlined {
+      font-size: 20px;
+      color: var(--ink-3);
+      flex-shrink: 0;
+    }
+
+    .auth-input-wrap input {
+      width: 100%;
+      min-width: 0;
+      height: 46px;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .auth-input-wrap input::placeholder {
+      color: #aaa9a5;
+    }
+
+    .auth-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin: 3px 0 5px;
+      font-size: 12.5px !important;
+      font-weight: 500 !important;
+      color: var(--ink-3) !important;
+      line-height: 1.55;
+      cursor: pointer;
+    }
+
+    .auth-check input {
+      width: 15px;
+      height: 15px;
+      margin-top: 3px;
+      accent-color: var(--blue);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .auth-check strong {
+      color: var(--ink);
+      font-weight: 700;
+      font-family: 'Sofia', cursive;
+    }
+
+    .auth-primary-btn {
+      width: 100%;
+      height: 48px;
+      border: none;
+      border-radius: var(--radius);
+      background: var(--blue);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s, transform 0.15s;
+    }
+
+    .auth-primary-btn:hover {
+      background: #1d51d4;
+      transform: translateY(-1px);
+    }
+
+    .auth-primary-btn .material-symbols-outlined {
+      font-size: 20px;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 7px 0 2px;
+      color: var(--ink-3);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: var(--border);
+    }
+
+    .auth-footer-text {
+      font-size: 13px;
+      color: var(--ink-3);
+      text-align: center;
+    }
+
+    .auth-footer-text button {
+      border: none;
+      background: transparent;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .auth-footer-text button:hover {
+      text-decoration: underline;
+    }
+
+    /* RIGHT VISUAL */
+    .auth-visual {
+      min-width: 0;
+      padding: 40px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .visual-stack {
+      width: 100%;
+      max-width: 520px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .launch-card,
+    .feature-card,
+    .infra-card {
+      width: 100%;
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .launch-header,
+    .feature-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .live-badge {
+      font-size: 11px;
+      color: var(--green);
+      background: var(--green-light);
+      border: 1px solid var(--green-border);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .launch-body {
+      padding: 22px 20px;
+    }
+
+    .launch-top {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 22px;
+    }
+
+    .launch-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue-light);
+      color: var(--blue);
+      border: 1px solid var(--blue-mid);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .launch-icon .material-symbols-outlined {
+      font-size: 23px;
+    }
+
+    .launch-top h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
+
+    .launch-top p {
+      color: var(--ink-3);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .signup-feature-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .signup-feature-list div {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .signup-feature-list .material-symbols-outlined {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--blue-light);
+      border: 1px solid var(--blue-mid);
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .signup-feature-list p {
+      min-width: 0;
+      font-size: 13px;
+      color: var(--ink-2);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .feature-body {
+      padding: 18px;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pipeline-box {
+      min-width: 0;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 10px;
+      text-align: center;
+    }
+
+    .pipeline-box span {
+      display: block;
+      font-size: 10px;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .pipeline-box strong {
+      display: block;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .pipeline-arrow {
+      color: var(--blue);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .infra-card {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .infra-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      background: var(--bg);
+    }
+
+    .infra-item span {
+      display: block;
+      font-size: 10px;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .infra-item strong {
+      font-size: 13px;
+      color: var(--ink-2);
+      font-weight: 700;
+    }
+
+    /* LOADER */
+    .centralize_loader {
+      position: fixed;
+      inset: 0;
+      background: rgba(247, 246, 243, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .centralize_loader.active {
+      display: flex;
+    }
+
+    .loader_box {
+      width: 64px;
+      height: 64px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--blue-light);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      nav {
+        padding: 18px 28px;
+      }
+
+      .auth-panel {
+        padding: 40px 28px;
+      }
+
+      .auth-visual {
+        padding: 28px;
+      }
+
+      .auth-brand h1 {
+        font-size: 36px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 16px 20px;
+      }
+
+      .auth-page {
+        min-height: auto;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .auth-panel {
+        padding: 40px 20px 32px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .auth-panel-inner {
+        max-width: 540px;
+      }
+
+      .auth-brand h1 {
+        font-size: 34px;
+      }
+
+      .auth-brand p {
+        max-width: 100%;
+      }
+
+      .auth-visual {
+        padding: 24px 20px;
+        background: var(--bg);
+      }
+
+      .visual-stack {
+        max-width: 540px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-actions {
+        gap: 8px;
+      }
+
+      .btn-ghost,
+      .btn-primary {
+        padding: 8px 12px;
+        font-size: 13px;
+      }
+
+      .logo {
+        font-size: 20px;
+      }
+
+      .auth-panel {
+        padding: 34px 16px 28px;
+      }
+
+      .auth-brand {
+        margin-bottom: 20px;
+      }
+
+      .auth-brand h1 {
+        font-size: 28px;
+        letter-spacing: -0.7px;
+      }
+
+      .auth-brand p {
+        font-size: 14px;
+      }
+
+      .badge {
+        font-size: 10px;
+        padding: 4px 10px;
+        margin-bottom: 18px;
+      }
+
+      .auth-card-body {
+        padding: 20px 16px;
+      }
+
+      .auth-header h2 {
+        font-size: 21px;
+      }
+
+      .auth-input-wrap {
+        padding: 0 12px;
+      }
+
+      .auth-input-wrap input {
+        height: 45px;
+        font-size: 13px;
+      }
+
+      .auth-primary-btn {
+        height: 46px;
+        font-size: 14px;
+      }
+
+      .auth-visual {
+        padding: 16px;
+      }
+
+      .launch-header,
+      .feature-header {
+        padding: 12px 14px;
+      }
+
+      .launch-body,
+      .feature-body {
+        padding: 16px 14px;
+      }
+
+      .launch-top {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .signup-feature-list {
+        grid-template-columns: 1fr;
+      }
+
+      .pipeline {
+        grid-template-columns: 1fr;
+      }
+
+      .pipeline-arrow {
+        transform: rotate(90deg);
+        justify-self: center;
+      }
+
+      .infra-card {
+        grid-template-columns: 1fr;
+        padding: 14px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      nav {
+        padding: 14px 16px;
+      }
+
+      .nav-actions {
+        display: none;
+      }
+
+      .auth-panel {
+        padding: 30px 14px 24px;
+      }
+
+      .auth-brand h1 {
+        font-size: 25px;
+      }
+
+      .auth-brand p,
+      .auth-header p {
+        font-size: 13px;
+      }
+
+      .auth-card-body {
+        padding: 18px 14px;
+      }
+
+      .auth-visual {
+        padding: 14px;
+      }
+
+      .card-title {
+        font-size: 12px;
+      }
+
+      .live-badge {
+        font-size: 10px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="logo">url<span>.</span>ify</a>
+
+    <div class="nav-actions">
+      <button class="btn-ghost" type="button" onclick="window.location.href='/'">
+        Home
+      </button>
+
+      <button class="btn-primary" type="button" onclick="window.location.href='/pages/login'">
+        Log in
+      </button>
+    </div>
+  </nav>
+
   <main class="auth-page signup-auth-page">
 
+    <!-- LEFT SIGNUP PANEL -->
     <section class="auth-panel">
-      <div class="auth-brand">
-        <h1 class="sofia-bold">urlify</h1>
-        <p class="inter-regular">
-          Create short links, track performance, and understand your audience.
-        </p>
-      </div>
+      <div class="auth-panel-inner">
 
-      <div class="auth-card signup-card">
-        <div class="auth-header">
-          <span class="material-symbols-outlined">
-            person_add
-          </span>
+        <div class="badge">
+          <span class="dot"></span>
+          Create secure workspace
+        </div>
 
-          <h2 class="inter-bold">
-            Create your account
-          </h2>
+        <div class="auth-brand">
+          <h1>
+            Start building smarter <em>links</em>.
+          </h1>
 
-          <p class="inter-regular">
-            Start managing links with real-time analytics and secure workspace tools.
+          <p>
+            Create short links, track performance, understand your audience, and manage everything from one clean dashboard.
           </p>
         </div>
 
-        <div class="auth-form">
-          <label class="inter-bold" for="full_name">
-            Full name
-          </label>
-
-          <div class="auth-input-wrap">
-            <span class="material-symbols-outlined">
-              badge
-            </span>
-
-            <input
-              type="text"
-              id="full_name"
-              class="inter-regular"
-              placeholder="Enter your full name"
-              autocomplete="name"
-            >
+        <div class="auth-card signup-card">
+          <div class="auth-card-header">
+            <div class="demo-dot" style="background:#FF5F57"></div>
+            <div class="demo-dot" style="background:#FEBC2E"></div>
+            <div class="demo-dot" style="background:#28C840"></div>
+            <span>urlify · account setup</span>
           </div>
 
-          <label class="inter-bold" for="user_name">
-            Username
-          </label>
+          <div class="auth-card-body">
+            <div class="auth-header">
+              <div class="auth-icon">
+                <span class="material-symbols-outlined">
+                  person_add
+                </span>
+              </div>
 
-          <div class="auth-input-wrap">
-            <span class="material-symbols-outlined">
-              alternate_email
-            </span>
+              <h2>
+                Create your account
+              </h2>
 
-            <input
-              type="text"
-              id="user_name"
-              class="inter-regular"
-              placeholder="Create a username"
-              autocomplete="username"
-            >
+              <p>
+                Start managing links with real-time analytics and secure workspace tools.
+              </p>
+            </div>
+
+            <div class="auth-form">
+              <label for="full_name">
+                Full name
+              </label>
+
+              <div class="auth-input-wrap">
+                <span class="material-symbols-outlined">
+                  badge
+                </span>
+
+                <input
+                  type="text"
+                  id="full_name"
+                  placeholder="Enter your full name"
+                  autocomplete="name"
+                >
+              </div>
+
+              <label for="user_name">
+                Username
+              </label>
+
+              <div class="auth-input-wrap">
+                <span class="material-symbols-outlined">
+                  alternate_email
+                </span>
+
+                <input
+                  type="text"
+                  id="user_name"
+                  placeholder="Create a username"
+                  autocomplete="username"
+                >
+              </div>
+
+              <label for="password">
+                Password
+              </label>
+
+              <div class="auth-input-wrap">
+                <span class="material-symbols-outlined">
+                  key
+                </span>
+
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="Create a strong password"
+                  autocomplete="new-password"
+                >
+              </div>
+
+              <label for="password_confirmed">
+                Confirm password
+              </label>
+
+              <div class="auth-input-wrap">
+                <span class="material-symbols-outlined">
+                  verified_user
+                </span>
+
+                <input
+                  type="password"
+                  id="password_confirmed"
+                  placeholder="Confirm your password"
+                  autocomplete="new-password"
+                >
+              </div>
+
+              <label class="auth-check">
+                <input type="checkbox" id="agreement_checker">
+
+                <span>
+                  I agree to the Terms & Conditions of
+                  <strong>urlify</strong>
+                </span>
+              </label>
+
+              <button type="button" class="auth-primary-btn sign-btn">
+                <span>Create account</span>
+                <span class="material-symbols-outlined">
+                  arrow_forward
+                </span>
+              </button>
+
+              <div class="auth-divider">
+                <span>OR</span>
+              </div>
+
+              <p class="auth-footer-text">
+                Already have an account?
+                <button
+                  type="button"
+                  onclick="transport('/pages/login')"
+                >
+                  Login now
+                </button>
+              </p>
+            </div>
           </div>
-
-          <label class="inter-bold" for="password">
-            Password
-          </label>
-
-          <div class="auth-input-wrap">
-            <span class="material-symbols-outlined">
-              key
-            </span>
-
-            <input
-              type="password"
-              id="password"
-              class="inter-regular"
-              placeholder="Create a strong password"
-              autocomplete="new-password"
-            >
-          </div>
-
-          <label class="inter-bold" for="password_confirmed">
-            Confirm password
-          </label>
-
-          <div class="auth-input-wrap">
-            <span class="material-symbols-outlined">
-              verified_user
-            </span>
-
-            <input
-              type="password"
-              id="password_confirmed"
-              class="inter-regular"
-              placeholder="Confirm your password"
-              autocomplete="new-password"
-            >
-          </div>
-
-          <label class="auth-check inter-regular">
-            <input type="checkbox" id="agreement_checker">
-            <span>
-              I agree to the Terms & Conditions of
-              <strong class="sofia-bold">urlify</strong>
-            </span>
-          </label>
-
-          <button type="button" class="auth-primary-btn sign-btn">
-            <span>Create account</span>
-            <span class="material-symbols-outlined">
-              arrow_forward
-            </span>
-          </button>
-
-          <div class="auth-divider">
-            <span>OR</span>
-          </div>
-
-          <p class="auth-footer-text inter-regular">
-            Already have an account?
-            <button
-              type="button"
-              onclick="transport('/pages/login')"
-            >
-              Login now
-            </button>
-          </p>
         </div>
+
       </div>
     </section>
 
+    <!-- RIGHT VISUAL PANEL -->
     <section class="auth-visual signup-visual">
-      <div class="auth-visual-card">
-        <div class="visual-top">
-          <span class="material-symbols-outlined">
-            rocket_launch
-          </span>
+      <div class="visual-stack">
 
-          <div>
-            <h3 class="inter-bold">
-              Launch your link workspace
-            </h3>
+        <div class="launch-card">
+          <div class="launch-header">
+            <span class="card-title">Launch your link workspace</span>
+            <span class="live-badge">● Ready</span>
+          </div>
 
-            <p class="inter-regular">
-              Create, manage, analyze, and export link performance from one dashboard.
-            </p>
+          <div class="launch-body">
+            <div class="launch-top">
+              <div class="launch-icon">
+                <span class="material-symbols-outlined">
+                  rocket_launch
+                </span>
+              </div>
+
+              <div>
+                <h3>
+                  Everything your links need.
+                </h3>
+
+                <p>
+                  Create, manage, analyze, and export link performance from one production-style dashboard.
+                </p>
+              </div>
+            </div>
+
+            <div class="signup-feature-list">
+              <div>
+                <span class="material-symbols-outlined">
+                  link_2
+                </span>
+                <p>Custom short links</p>
+              </div>
+
+              <div>
+                <span class="material-symbols-outlined">
+                  analytics
+                </span>
+                <p>Click analytics</p>
+              </div>
+
+              <div>
+                <span class="material-symbols-outlined">
+                  public
+                </span>
+                <p>Geo insights</p>
+              </div>
+
+              <div>
+                <span class="material-symbols-outlined">
+                  security
+                </span>
+                <p>Secure dashboard</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="signup-feature-list">
-          <div>
-            <span class="material-symbols-outlined">
-              link_2
-            </span>
-            <p>Custom short links</p>
+        <div class="feature-card">
+          <div class="feature-header">
+            <span class="card-title">How URLify processes a link</span>
+            <span class="live-badge">● Fast path</span>
           </div>
 
-          <div>
-            <span class="material-symbols-outlined">
-              analytics
-            </span>
-            <p>Click analytics</p>
-          </div>
+          <div class="feature-body">
+            <div class="pipeline">
+              <div class="pipeline-box">
+                <span>Step 01</span>
+                <strong>Create</strong>
+              </div>
 
-          <div>
-            <span class="material-symbols-outlined">
-              public
-            </span>
-            <p>Geo insights</p>
-          </div>
+              <div class="pipeline-arrow">→</div>
 
-          <div>
-            <span class="material-symbols-outlined">
-              security
-            </span>
-            <p>Secure dashboard</p>
+              <div class="pipeline-box">
+                <span>Step 02</span>
+                <strong>Redirect</strong>
+              </div>
+
+              <div class="pipeline-arrow">→</div>
+
+              <div class="pipeline-box">
+                <span>Step 03</span>
+                <strong>Analyze</strong>
+              </div>
+            </div>
           </div>
         </div>
+
+        <div class="infra-card">
+          <div class="infra-item">
+            <span>Cache</span>
+            <strong>Redis</strong>
+          </div>
+
+          <div class="infra-item">
+            <span>Storage</span>
+            <strong>PostgreSQL</strong>
+          </div>
+
+          <div class="infra-item">
+            <span>Auth</span>
+            <strong>JWT</strong>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -202,6 +1154,12 @@
       <div class="loading"></div>
     </div>
   </div>
+
+  <script>
+    function transport(path) {
+      window.location.href = path;
+    }
+  </script>
 
   <script src="../scripts/signup.js"></script>
 </body>
