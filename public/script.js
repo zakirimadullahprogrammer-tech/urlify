@@ -2091,26 +2091,30 @@ function updateTopRegionCard(data, totalClicks) {
       getCountryName(topCode);
 
     if (regionFlag) {
-      regionFlag.className = "";
-      regionFlag.innerHTML =
-        `<span class="fi fi-${topCode.toLowerCase()}"></span>`;
-    }
+  regionFlag.style.display = "";
+  regionFlag.className = "";
+  regionFlag.innerHTML =
+    `<span class="fi fi-${topCode.toLowerCase()}"></span>`;
+}
 
-    if (regionName) {
-      regionName.textContent = countryName;
-      regionName.title = countryName;
-    }
+if (regionName) {
+  regionName.textContent = countryName;
+  regionName.title = countryName;
+  regionName.classList.remove("no-region-data");
+}
   } else {
-    if (regionFlag) {
-      regionFlag.className = "material-symbols-outlined";
-      regionFlag.textContent = "public";
-    }
-
-    if (regionName) {
-      regionName.textContent = "No data";
-      regionName.title = "No data";
-    }
+  if (regionFlag) {
+    regionFlag.className = "";
+    regionFlag.innerHTML = "";
+    regionFlag.style.display = "none";
   }
+
+  if (regionName) {
+    regionName.textContent = "No data";
+    regionName.title = "No data";
+    regionName.classList.add("no-region-data");
+  }
+}
 }
 
 function updateAnalyticsModeUI(data) {
@@ -2618,7 +2622,27 @@ function getRecentActivitySkeleton() {
 ========================= */
 
 function renderClickAnalyticsChart(data, selectedRange) {
+  
+ const chartSkeletonContainer =
+    document.getElementById("chartSkeletonContainer");
+
+  if (
+    chartSkeletonContainer &&
+    !chartSkeletonContainer.querySelector("#clickChart2")
+  ) {
+    chartSkeletonContainer.innerHTML = `
+      <div
+        id="chartRangeLoader"
+        class="chart-range-loader"
+        style="display: none;"
+      ></div>
+
+      <canvas id="clickChart2"></canvas>
+    `;
+  }
+
   const canvas = document.getElementById("clickChart2");
+
 
   if (!canvas || typeof Chart === "undefined") return;
 
@@ -2638,6 +2662,11 @@ function renderClickAnalyticsChart(data, selectedRange) {
 
   const hasRealData =
     rawClicks.some(click => click > 0);
+
+    if (!hasRealData) {
+  showClickAnalyticsEmptyState();
+  return;
+}
 
   if (window.clickChartInstance) {
     window.clickChartInstance.destroy();
@@ -3171,11 +3200,40 @@ function showEmptyWorldMapState() {
 
   worldMap.innerHTML = `
     <div class="map-empty-state">
-      <span class="material-symbols-outlined map-empty-icon">public</span>
+      <span class="material-symbols-outlined analytics-empty-icon">public</span>
 
       <h4 class="inter-regular">
         No geographic analytics yet
       </h4>
+    </div>
+  `;
+}
+function showClickAnalyticsEmptyState() {
+  const chartSkeletonContainer =
+    document.getElementById("chartSkeletonContainer");
+
+  if (!chartSkeletonContainer) return;
+
+  if (window.clickChartInstance) {
+    window.clickChartInstance.destroy();
+    window.clickChartInstance = null;
+  }
+
+  chartSkeletonContainer.innerHTML = `
+    <div
+      id="chartRangeLoader"
+      class="chart-range-loader"
+      style="display: none;"
+    ></div>
+
+    <div class="analytics-empty-state click-empty-state">
+      <span class="material-symbols-outlined analytics-empty-icon">
+        monitoring
+      </span>
+
+      <p class="analytics-empty-text">
+        No click analytics yet
+      </p>
     </div>
   `;
 }
@@ -3393,20 +3451,36 @@ function renderRecentActivity() {
         ? `<span class="fi fi-${countryCode.toLowerCase()}"></span>`
         : `<span>🌍</span>`;
 
+    const relativeTime =
+      activity.clickedAt
+        ? formatRelativeTime(activity.clickedAt)
+        : "Unknown time";
+
+    const fullTime =
+      activity.clickedAt
+        ? formatFullDateTime(activity.clickedAt)
+        : "Unknown time";
+
     container.innerHTML += `
       <div class="activity-card">
-        <div class="activity-header">
-          ${flag}
-          <span>
-            ${escapeHtml(countryName)} clicked
-            <button
-              type="button"
-              class="analytics-short-link-btn"
-              onclick="openAnalyticsByShortCode(event, '${escapeHtml(activity.shortCode)}')"
-            >
-              /${escapeHtml(activity.shortCode || "unknown")}
-            </button>
-          </span>
+        <div class="activity-top-row">
+          <div class="activity-header">
+            ${flag}
+            <span>
+              ${escapeHtml(countryName)} clicked
+              <button
+                type="button"
+                class="analytics-short-link-btn"
+                onclick="openAnalyticsByShortCode(event, '${escapeHtml(activity.shortCode || "")}')"
+              >
+                /${escapeHtml(activity.shortCode || "unknown")}
+              </button>
+            </span>
+          </div>
+
+          <div class="activity-time" title="${escapeHtml(fullTime)}">
+            ${escapeHtml(relativeTime)}
+          </div>
         </div>
 
         <div class="activity-meta">
@@ -3415,14 +3489,6 @@ function renderRecentActivity() {
           ${escapeHtml(activity.device || "Unknown")}
           •
           ${escapeHtml(activity.trafficSource || "Direct")}
-        </div>
-
-        <div class="activity-time">
-          ${
-            activity.clickedAt
-              ? new Date(activity.clickedAt).toLocaleString()
-              : "Unknown time"
-          }
         </div>
       </div>
     `;
@@ -3447,7 +3513,58 @@ function renderRecentActivity() {
     `;
   }
 }
+function formatRelativeTime(dateInput) {
+  const date = new Date(dateInput);
 
+  if (Number.isNaN(date.getTime())) {
+    return "Unknown time";
+  }
+
+  const now = new Date();
+  const diffMs = now - date;
+
+  if (diffMs < 0) {
+    return "Just now";
+  }
+
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
+
+  if (diffSec < 5) return "Just now";
+  if (diffSec < 60) return `${diffSec} seconds ago`;
+  if (diffMin === 1) return "1 minute ago";
+  if (diffMin < 60) return `${diffMin} minutes ago`;
+  if (diffHour === 1) return "1 hour ago";
+  if (diffHour < 24) return `${diffHour} hours ago`;
+  if (diffDay === 1) return "Yesterday";
+  if (diffDay < 7) return `${diffDay} days ago`;
+
+  return date.toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
+}
+
+function formatFullDateTime(dateInput) {
+  const date = new Date(dateInput);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Unknown time";
+  }
+
+  return date.toLocaleString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  });
+}
 function showMoreRecentActivity() {
   const total = recentActivityData.length;
 
@@ -3470,8 +3587,20 @@ function showMoreRecentActivity() {
 window.showMoreRecentActivity = showMoreRecentActivity;
 
 function renderDeviceBreakdown(devices = []) {
-  const canvas = document.getElementById("deviceChart");
-  const legend = document.getElementById("deviceLegend");
+  const deviceWrap =
+    document.querySelector(".device-chart-wrap");
+
+  if (deviceWrap && !deviceWrap.querySelector("#deviceChart")) {
+    deviceWrap.innerHTML = `
+      <canvas id="deviceChart"></canvas>
+    `;
+  }
+
+  const canvas =
+    document.getElementById("deviceChart");
+
+  const legend =
+    document.getElementById("deviceLegend");
 
   if (!canvas || typeof Chart === "undefined") return;
 
@@ -3481,47 +3610,37 @@ function renderDeviceBreakdown(devices = []) {
   }
 
   const validDevices = Array.isArray(devices)
-    ? devices.filter(item => Number(item.clicks || item.visits || 0) > 0)
+    ? devices.filter(item =>
+        Number(item.clicks || item.visits || 0) > 0
+      )
     : [];
 
   if (!validDevices.length) {
-    if (legend) {
-      legend.innerHTML = `
-        <div class="empty-analytics">
-          No device data yet
-        </div>
-      `;
-    }
-
-    window.deviceChartInstance = new Chart(canvas, {
-      type: "doughnut",
-      data: {
-        labels: ["No data"],
-        datasets: [
-          {
-            data: [1],
-            backgroundColor: ["#e5e7eb"],
-            borderWidth: 0
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: "72%",
-        plugins: {
-          legend: {
-            display: false
-          },
-          tooltip: {
-            enabled: false
-          }
-        }
-      }
-    });
-
-    return;
+  if (window.deviceChartInstance) {
+    window.deviceChartInstance.destroy();
+    window.deviceChartInstance = null;
   }
+
+  if (deviceWrap) {
+    deviceWrap.innerHTML = `
+  <div class="analytics-empty-state device-empty-state">
+    <span class="material-symbols-outlined analytics-empty-icon">
+      devices
+    </span>
+
+    <p class="analytics-empty-text">
+      No device data yet
+    </p>
+  </div>
+`;
+  }
+
+  if (legend) {
+    legend.innerHTML = "";
+  }
+
+  return;
+}
 
   const labels = validDevices.map(item =>
     item.device || item.deviceType || "Unknown"
@@ -3544,8 +3663,10 @@ function renderDeviceBreakdown(devices = []) {
 
   window.deviceChartInstance = new Chart(canvas, {
     type: "doughnut",
+
     data: {
       labels,
+
       datasets: [
         {
           data: values,
@@ -3556,14 +3677,17 @@ function renderDeviceBreakdown(devices = []) {
         }
       ]
     },
+
     options: {
       responsive: true,
       maintainAspectRatio: false,
       cutout: "72%",
+
       plugins: {
         legend: {
           display: false
         },
+
         tooltip: {
           backgroundColor: "#ffffff",
           titleColor: "#111827",
@@ -3573,6 +3697,7 @@ function renderDeviceBreakdown(devices = []) {
           padding: 12,
           cornerRadius: 12,
           displayColors: true,
+
           callbacks: {
             label(context) {
               const value = context.parsed;
@@ -4640,5 +4765,200 @@ window.addEventListener("pageshow", () => {
 
   if (sortFilterEl) {
     sortFilterEl.value = "newest";
+  }
+});
+const deleteAccountBtn =
+  document.getElementById("deleteAccountBtn");
+
+const deleteAccountModal =
+  document.getElementById("deleteAccountModal");
+
+const closeDeleteModalBtn =
+  document.getElementById("closeDeleteModalBtn");
+
+const cancelDeleteAccountBtn =
+  document.getElementById("cancelDeleteAccountBtn");
+
+const confirmDeleteAccountBtn =
+  document.getElementById("confirmDeleteAccountBtn");
+
+const deletePasswordInput =
+  document.getElementById("deletePassword");
+
+const deleteConfirmTextInput =
+  document.getElementById("deleteConfirmText");
+
+const deleteAccountError =
+  document.getElementById("deleteAccountError");
+
+function openDeleteAccountModal() {
+  if (!deleteAccountModal) return;
+
+  deleteAccountModal.classList.add("open");
+
+  if (deletePasswordInput) {
+    deletePasswordInput.value = "";
+  }
+
+  if (deleteConfirmTextInput) {
+    deleteConfirmTextInput.value = "";
+  }
+
+  hideDeleteAccountError();
+
+  setTimeout(() => {
+    deletePasswordInput?.focus();
+  }, 50);
+}
+
+function closeDeleteAccountModal() {
+  if (!deleteAccountModal) return;
+
+  deleteAccountModal.classList.remove("open");
+
+  if (deletePasswordInput) {
+    deletePasswordInput.value = "";
+  }
+
+  if (deleteConfirmTextInput) {
+    deleteConfirmTextInput.value = "";
+  }
+
+  hideDeleteAccountError();
+}
+
+function showDeleteAccountError(message) {
+  if (!deleteAccountError) return;
+
+  deleteAccountError.textContent =
+    message || "Something went wrong";
+
+  deleteAccountError.classList.add("show");
+}
+
+function hideDeleteAccountError() {
+  if (!deleteAccountError) return;
+
+  deleteAccountError.textContent = "";
+  deleteAccountError.classList.remove("show");
+}
+
+async function handleDeleteAccount() {
+  const password =
+    deletePasswordInput?.value.trim();
+
+  const confirmText =
+    deleteConfirmTextInput?.value.trim();
+
+  hideDeleteAccountError();
+
+  if (!password) {
+    showDeleteAccountError("Password is required");
+    return;
+  }
+
+  if (confirmText !== "DELETE") {
+    showDeleteAccountError(
+      "Please type DELETE to confirm account deletion"
+    );
+    return;
+  }
+
+  if (!confirmDeleteAccountBtn) return;
+
+  confirmDeleteAccountBtn.disabled = true;
+  confirmDeleteAccountBtn.textContent = "Deleting...";
+
+  try {
+    const response = await fetch("/api/settings/account", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        password,
+        confirmText
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data?.message || "Failed to delete account"
+      );
+    }
+
+    closeDeleteAccountModal();
+
+    showToast(
+      "Account deleted",
+      data?.message ||
+        "Your account has been deleted successfully.",
+      "success"
+    );
+
+    setTimeout(() => {
+      window.location.replace("/pages/login");
+    }, 1200);
+
+  } catch (error) {
+    console.error("Delete account error:", error);
+
+    showDeleteAccountError(
+      error.message || "Failed to delete account"
+    );
+
+  } finally {
+    confirmDeleteAccountBtn.disabled = false;
+    confirmDeleteAccountBtn.textContent =
+      "Delete permanently";
+  }
+}
+
+if (deleteAccountBtn) {
+  deleteAccountBtn.addEventListener(
+    "click",
+    openDeleteAccountModal
+  );
+}
+
+if (closeDeleteModalBtn) {
+  closeDeleteModalBtn.addEventListener(
+    "click",
+    closeDeleteAccountModal
+  );
+}
+
+if (cancelDeleteAccountBtn) {
+  cancelDeleteAccountBtn.addEventListener(
+    "click",
+    closeDeleteAccountModal
+  );
+}
+
+if (confirmDeleteAccountBtn) {
+  confirmDeleteAccountBtn.addEventListener(
+    "click",
+    handleDeleteAccount
+  );
+}
+
+if (deleteAccountModal) {
+  deleteAccountModal.addEventListener("click", event => {
+    if (event.target === deleteAccountModal) {
+      closeDeleteAccountModal();
+    }
+  });
+}
+
+document.addEventListener("keydown", event => {
+  if (
+    event.key === "Escape" &&
+    deleteAccountModal?.classList.contains("open")
+  ) {
+    closeDeleteAccountModal();
   }
 });

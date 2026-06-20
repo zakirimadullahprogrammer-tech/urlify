@@ -202,7 +202,55 @@ if (signupBtn) {
 function isEmpty(str) {
     return !str || str.trim() === "";
 }
+function isValidFullName(fullname) {
+  if (isEmpty(fullname)) return false;
 
+  const trimmed = fullname.trim();
+
+  /*
+    Allows:
+    Zakir Imadullah
+    Md Zakir
+    Abdul Rahman
+    O'Connor
+  */
+  const regex = /^[A-Za-z][A-Za-z\s.'-]{1,58}[A-Za-z]$/;
+
+  return regex.test(trimmed);
+}
+
+function isValidUsername(username) {
+  if (isEmpty(username)) return false;
+
+  const trimmed = username.trim();
+
+  /*
+    Rules:
+    - 3 to 30 chars
+    - must start with a letter
+    - letters, numbers, underscore allowed
+  */
+  const regex = /^[A-Za-z][A-Za-z0-9_]{2,29}$/;
+
+  return regex.test(trimmed);
+}
+
+function isValidPassword(password) {
+  if (!password) return false;
+
+  /*
+    Rules:
+    - 8+ characters
+    - at least one lowercase
+    - at least one uppercase
+    - at least one number
+    - at least one special character
+  */
+  const regex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+  return regex.test(password);
+}
 function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email.trim());

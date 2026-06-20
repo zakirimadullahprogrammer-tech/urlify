@@ -788,6 +788,53 @@
             </div>
          </div>
       </div>
+      <div class="delete-modal-overlay" id="deleteAccountModal">
+  <div class="delete-modal">
+    <div class="delete-modal-header">
+      <h3>Delete account</h3>
+      <button type="button" id="closeDeleteModalBtn">×</button>
+    </div>
+
+    <p class="delete-modal-text">
+      This action permanently deletes your account, links, and click analytics.
+      This cannot be undone.
+    </p>
+
+    <label for="deletePassword">
+      Password
+    </label>
+
+    <input
+      type="password"
+      id="deletePassword"
+      placeholder="Enter your password"
+      autocomplete="current-password"
+    >
+
+    <label for="deleteConfirmText">
+      Type DELETE to confirm
+    </label>
+
+    <input
+      type="text"
+      id="deleteConfirmText"
+      placeholder="DELETE"
+      autocomplete="off"
+    >
+
+    <p class="delete-error" id="deleteAccountError"></p>
+
+    <div class="delete-modal-actions">
+      <button type="button" class="delete-cancel-btn" id="cancelDeleteAccountBtn">
+        Cancel
+      </button>
+
+      <button type="button" class="delete-confirm-btn" id="confirmDeleteAccountBtn">
+        Delete permanently
+      </button>
+    </div>
+  </div>
+</div>
       <script src="../script.js"></script>
    </body>
 </html>
