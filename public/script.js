@@ -3737,9 +3737,8 @@ function renderDeviceBreakdown(devices = []) {
             label(context) {
               const value = context.parsed;
 
-              const percentage = total
-                ? ((value / total) * 100).toFixed(1)
-                : 0;
+              const percentage =
+  total ? Math.round((value / total) * 100) : 0;
 
               return `${context.label}: ${value} visits • ${percentage}%`;
             }
@@ -3759,8 +3758,7 @@ function renderDeviceBreakdown(devices = []) {
           Number(item.clicks || item.visits || 0);
 
         const percentage =
-          total ? ((value / total) * 100).toFixed(1) : 0;
-
+  total ? Math.round((value / total) * 100) : 0;
         return `
           <div class="device-legend-item">
             <div class="device-legend-left">
