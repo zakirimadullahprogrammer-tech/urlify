@@ -1,0 +1,105 @@
+/* =========================
+   SMALL LAPTOP / TABLET
+========================= */
+@media (max-width: 1200px) {
+
+}
+
+/* =========================
+   TABLET
+========================= */
+@media (max-width: 900px) {
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 600px) {
+    .flex-20{
+      flex-direction: column;
+    }
+    .big_arrow{
+      transform: rotate(90deg);
+    }
+    .lu-limit{
+      width: 90% !important;
+    }
+    .short_ad_link{
+      width: 100% !important;
+    }
+    .body_1_content, .body_2, .body_3, .analyticsInnerWrap, .ds1{
+      padding:20px !important; 
+    }
+    .analytics-header{
+      padding:0px !important;
+    }
+    h1{
+      font-size:60px !important;
+    }
+     
+    .lp1{
+      width: 100% !important;
+    }
+    .lp2{
+      width:0% !important;
+   }
+   .lp3{
+      width: 0% !important;
+   }
+
+   .ds2{
+    width: 100% !important;
+    height: fit-content;
+   }
+   .stats-grid{
+        grid-template-columns: 1fr !important; 
+
+   }
+   .dash_page,
+  .ds1,
+  .ds2,
+  section,
+  #analyticsSection {
+    height: auto !important;
+    min-height: 100vh;
+    overflow: visible !important;
+  }
+
+  .analyticsInnerWrap {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .analytics-header{
+    padding:20px !important;
+    align-items: flex-start !important; 
+  }
+  .analytics-header h1{
+    font-size:40px !important;
+  }
+  
+  #chartSkeletonContainer,
+  .chart-canvas-box {
+    height: 320px !important;
+    min-height: 320px !important;
+  }
+
+  #clickChart2 {
+    height: 320px !important;
+    max-height: 320px !important;
+  }
+  .settings-grid{
+        grid-template-columns: 1fr !important;
+  }
+  .settings-card{
+    width: 100% !important;
+  }
+  
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+@media (max-width: 400px) {
+ 
+}
