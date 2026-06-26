@@ -321,7 +321,7 @@ npm start
 * Advanced analytics filters
 * Geo heatmaps
 * Developer API Section
-* 
+
 ## License
 
 MIT actually remove old screenshots bro , I have screenshots inside screenshots and those are overview_pic1.png, overview_pic2.png, overview_pic3.png, overview_pic4.png, links_pic1.png, links_pic2.png, links_pic3.png, settings_pic1.png, settings_pic2.png
