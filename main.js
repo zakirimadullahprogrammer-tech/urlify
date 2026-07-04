@@ -38,7 +38,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Serve static files correctly
+// static files
 app.use(express.static(path.join(__dirname, "public")));
 
 // API Routes
@@ -59,7 +59,7 @@ app.get("/", (req, res) => {
 // Initialize sockets
 initializeSocket(io);
 
-// IMPORTANT: Keep redirect route LAST
+// redirect route 
 app.use("/", redirectRoutes);
 
 const PORT = process.env.PORT || 8080;
