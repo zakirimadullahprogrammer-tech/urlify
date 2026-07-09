@@ -310,7 +310,7 @@ UPSTASH_RESIS_REST_TOKEN=
 ## Installation
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/zakirimadullahprogrammer-tech/urlify
 cd urlify
 npm install
 npm start
