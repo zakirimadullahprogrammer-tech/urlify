@@ -303,7 +303,8 @@ Create a `.env` file:
 ```env
 DATABASE_URL=
 JWT_SECRET=
-REDIS_URL=
+UPSTASH_REDIS_REST_URL=
+UPSTASH_RESIS_REST_TOKEN=
 ```
 
 ## Installation
