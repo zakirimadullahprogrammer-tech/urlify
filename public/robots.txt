@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /pages/login
+Disallow: /pages/signup
+Disallow: /pages/dashboard
+
+Sitemap: https://urlify-psi.vercel.app/sitemap.xml
